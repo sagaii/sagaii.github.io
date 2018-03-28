@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>赫拉迪克NPC</title>
+        <description>technical skills  blog</description>
+        <link>http://www.sagaii.cn</link>
+        <atom:link href="http://www.sagaii.cn/feed.xml" rel="self" type="application/rss+xml" />
+        <pubDate>2018-03-28 12:03:06</pubDate>
+        <lastBuildDate>2018-03-28 12:03:06</lastBuildDate>
+        <generator>Gitblog v1.0</generator>
+                <item>
+            <title>注册Windows服务工具(WinSW) for gogs</title>
+            <description>
+            &lt;p&gt;﻿&lt;!--
+author: sagaii
+head: http://www.sagaii.cn/blog/img/zoltunsmall.png
+date: 2018-03-05
+title: 注册Windows服务工具(WinSW) for gogs
+tags:  WinSW
+images: http://www.sagaii.cn/blog/img/zoltun.png
+category: technology
+status: publish
+summary: .
+--&gt;&lt;/p&gt;
+&lt;h2&gt;一、 原由&lt;/h2&gt;
+&lt;p&gt;近日，看到cnblog上介绍gogs，因前期我用的BonoBo.Git.Server缺少Personal Access Token功能，无法方面的与github,vsts，jenkins集成。
+试用了gogs，发现确实是一款良心之作，如其宣传的“一款极易搭建的自助 Git 服务”（作为中国的一款opensource系统，值得点赞）。
+不过，其介绍的使用内置windows服务功能配置windows服务，很容易失败，其推荐的NSSM好像又貌似复杂（其实也挺简单）。因此，自己又用了一下WinSW.&lt;/p&gt;
+&lt;h2&gt;二、 WinSW&lt;/h2&gt;
+&lt;p&gt;winsw可以将Windows上的任何一个程序注册为服务，如果不需要，也可以方便的卸载服务。 它是一个单个的可执行文件，可以到https://github.com/kohsuke/winsw/releases下载。winsw可以运行在.NET2和.NET4两个版本上。&lt;/p&gt;
+&lt;p&gt;使用前，需要编写一个和程序同名的XML文件作为winsw的配置文件。以下是我配置gogs的参数：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;     &amp;lt;service&amp;gt;
+       &amp;lt;id&amp;gt;gogs&amp;lt;/id&amp;gt;
+       &amp;lt;name&amp;gt;gogs&amp;lt;/name&amp;gt;
+       &amp;lt;description&amp;gt;go git service(port3000)&amp;lt;/description&amp;gt;
+       &amp;lt;executable&amp;gt;gogs.exe&amp;lt;/executable&amp;gt;
+       &amp;lt;arguments&amp;gt; web --config  &quot;D:\gogs\custom\conf\app.ini&quot;&amp;lt;/arguments&amp;gt;
+       &amp;lt;logmode&amp;gt;reset&amp;lt;/logmode&amp;gt;
+    &amp;lt;/service&amp;gt;
+
+把配置文件和可执行文件放在一起，打开一个管理员权限的命令提示符或Powershell窗口
+，然后输入winsw install 命令，如果返回值为0，说明已将程序注册为服务。
+
+如果不再需要这个服务，使用winsw uninstall即可卸载服务。&lt;/code&gt;&lt;/pre&gt;            </description>
+            <pubDate>2018-03-28 12:19:04</pubDate>
+            <link>http://www.sagaii.cn/blog/20180327WinSW.html</link>
+            <guid isPermaLink="true">http://www.sagaii.cn/blog/20180327WinSW.html</guid>
+                                               <category>technology</category>
+                                    </item>
+                <item>
+            <title>关于反向代理的总结</title>
+            <description>
+            &lt;p&gt;﻿&lt;!--
+author: sagaii
+head: http://www.sagaii.cn/blog/img/zoltunsmall.png
+date: 2018-03-05
+title: 关于反向代理的总结
+tags:  ReverseProxy
+images: http://www.sagaii.cn/blog/img/zoltun.png
+category: technology
+status: publish
+summary: .
+--&gt;&lt;/p&gt;
+&lt;h2&gt;一、 原由&lt;/h2&gt;
+&lt;p&gt;单位服务器对外的域名和IP都有限制，最近端口也封锁的很严重，又搞了个安恒玄武盾，搞定好的功能都没办法使用。
+最初选择反向代理主要是希望通过网址的二级目录形式访问内网不同端口的web服务。开始选择的是Bonobo git server
+通过http方式提交代码，应该是最基本的吧，谁知url当中出现&amp;quot;.&amp;quot;就会被防火墙识别成威胁，最后选择了scm-manager。
+为此，专门学习了一下反向代理。&lt;/p&gt;
+&lt;h2&gt;二、 反向代理原理&lt;/h2&gt;
+&lt;p&gt;反向代理（Reverse Proxy）方式是指以代理服务器来接受Internet上的连接请求，然后将请求转发给内部网络上的服务器；并将从服务器上得到的结果返回给Internet上请求连接的客户端，此时代理服务器对外就表现为一个服务器。
+通常的代理服务器，只用于代理内部网络对Internet的连接请求，客户机必须指定代理服务器,并将本来要直接发送到Web服务器上的http请求发送到代理服务器中。当一个代理服务器能够代理外部网络上的主机，访问内部网络时，这种代理服务的方式称为反向代理服务。
+&lt;img src=&quot;./img/rp.gif&quot; alt=&quot;反向代理原理图&quot; /&gt;&lt;/p&gt;
+&lt;h2&gt;三、 IIS反向代理配置&lt;/h2&gt;
+&lt;p&gt;配置IIS反向代理需要下载安装ARR（Application Request Routing）， &lt;a href=&quot;http://www.iis.net/downloads/microsoft/application-request-routing&quot;&gt;http://www.iis.net/downloads/microsoft/application-request-routing&lt;/a&gt;
+安装完成后，IIS里会多出两个图标，分别是Application Request Routing和URL重写。注意：需要在IIS当中双击ApplicationRequest Routing，在右侧Server Proxy Settings里，将代理功能开启。&lt;/p&gt;
+&lt;p&gt;IIS反向代理配置实质就是配置URL重写规则。IIS当中的URL重写规则分为“入站规则”和“出站规则”。简单的理解入站规则指的是外部用户通过浏览器向代理服务器提出的Get请求（通过浏览器调试工具中控制台可以查看）时应用的规则。出站规则指的是代理服务器接后台回传回来的数据后，通过反向代理服务器向用户端浏览器回传过程当中应用的规则。
+iis反向代理配置当中最难写的就是出站规则。 入站规则和出站规则当中对于url后面是否多一个“/”，往往也会带来不小的坑。
+出站规则建议先用向导配置，会产生一个判别文本是html的条件，如果缺少这个条件往往出站规则就会错误。&lt;/p&gt;
+&lt;h2&gt;四、Nginx反向代理配置&lt;/h2&gt;
+&lt;p&gt;nginx配置反向代理确实比较简单。 但是，nginx默认只支持类似iis的入站规则代理，即客户端提出get请求的时候，进行url的改写。另外，好像默认是启动了动静分离，静态内容（css,js）默认是从nginx代理服务器的目录当中访问，当启用了nginx反向代理，指向内网的服务器的时候，往往会丢失css和js。对于丢失css和js的解决方法是是采用rewrite语句改写get请求（url)，这带来的一个问题是css和js需要有一个相同的改写模式。 如果一个代理服务器要配置转向多个web网站的时候，往往会隐藏风险。&lt;/p&gt;
+&lt;p&gt;总结：个人配置了iis反向代理，反而认为功能要比nginx强大，好用。 nginx虽然简单的配置html的代理简单，但是对于多个网站的同时反向代理不太合适。 实际上，最后2个反向代理方法都放弃了。 选择了FRP内网穿透功能。&lt;/p&gt;
+&lt;h2&gt;五、正则表达式&lt;/h2&gt;
+&lt;p&gt;不管是iis和nginx的反向代理，都需要用到正则表达式。 验证正则表达式最好的平台应该就是：
+&lt;a href=&quot;https://regex101.com/&quot;&gt;https://regex101.com/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;事实上，这个网站也是开源的，托管在github上。&lt;/p&gt;            </description>
+            <pubDate>2018-03-28 12:19:04</pubDate>
+            <link>http://www.sagaii.cn/blog/20180305AboutReverseProxy.html</link>
+            <guid isPermaLink="true">http://www.sagaii.cn/blog/20180305AboutReverseProxy.html</guid>
+                                               <category>technology</category>
+                                    </item>
+                <item>
+            <title>2018第一篇Blog</title>
+            <description>
+            &lt;p&gt;﻿&lt;!--
+author: sagaii
+head: http://www.sagaii.cn/blog/img/zoltunsmall.png
+date: 2018-01-14
+title: 2018第一篇Blog
+tags: FirstBlog
+images: http://www.sagaii.cn/blog/img/zoltun.png
+category: Others
+status: publish
+summary: 2018乱弹Blog.
+--&gt;&lt;/p&gt;
+&lt;h2&gt;一、 引言&lt;/h2&gt;
+&lt;p&gt;好久好久没写Blog，最近总觉得记性不好，是需要把一些东西记录下来。另外，网上很多精华的东西实在太少了
+坑很多，因此，本Blog就想把某些细节的坑给补上。&lt;/p&gt;
+&lt;h2&gt;二、 由来&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;不是游戏沉溺者，但一直是大菠萝粉。&lt;/li&gt;
+&lt;li&gt;Zoltun Kulle  (&lt;a href=&quot;https://www.diablowiki.net/Zoltun_Kulle&quot;&gt;https://www.diablowiki.net/Zoltun_Kulle&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;名言：当他们杀害安达利尔时，我没有站起来说话， 当他们杀害阿兹莫丹时，我没有站起来说话， 当他们杀害堕落的衣卒尔时，我没有站起来说话， 当最终他们走向我时，再也没有人站出来为我说话。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;三、 关于本Blog系统&lt;/h2&gt;
+&lt;p&gt;本Blog系统是基于GitBlog系统搭建（感谢作者），expert 全站静态页面。
+后台支持程序有 scm-manager, jenkins, github .&lt;/p&gt;
+&lt;p&gt;基本工作流程如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;用atom撰写文字（客户机，笔记本等）&lt;/li&gt;
+&lt;li&gt;git上传到scm-manager系统（服务器1）（git-server系统部署在单位内网，通过配置FRP穿透访问（服务器2））&lt;/li&gt;
+&lt;li&gt;配置jenkins任务（服务器1），定时下载git库当中的文档，使用gitblog 导出全站命令生成静态页面&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;配置jenkins任务（服务器1），定时上传静态页面到github.&lt;/p&gt;
+&lt;p&gt;以前写的一些Blog都因为各种原因丢失了。所以，这次做了备份，把单位内网的git-server等内容用Syncthing同步备份到家里的NAS当中。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;四、联系交流&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;  Email to me , sagaii :  cube_npc@foxmail.com            &lt;/code&gt;&lt;/pre&gt;            </description>
+            <pubDate>2018-03-28 12:19:04</pubDate>
+            <link>http://www.sagaii.cn/blog/firstBlog.html</link>
+            <guid isPermaLink="true">http://www.sagaii.cn/blog/firstBlog.html</guid>
+                                               <category>Others</category>
+                                    </item>
+                <item>
+            <title>实用网站集</title>
+            <description>
+            &lt;!--
+author: sagaii
+head: http://www.sagaii.cn/blog/img/zoltunsmall.png
+date: 2018-01-14
+title: 实用网站集
+tags: SitesLink
+images: http://www.sagaii.cn/blog/img/zoltun.png
+category: SiteLink
+status: publish
+summary: 记录一些非常实用的网站.
+--&gt;
+&lt;h2&gt;一、开发类&lt;/h2&gt;
+&lt;h3&gt;1. PC端开发&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://dotnet.github.io/&quot;&gt;1. .net core (&lt;a href=&quot;https://dotnet.github.io/&quot;&gt;https://dotnet.github.io/&lt;/a&gt;)&lt;/a&gt;  &lt;/p&gt;
+&lt;h3&gt;2.  移动端开发&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;http://www.apicloud.com&quot;&gt;1. APICloud(&lt;a href=&quot;http://www.apicloud.com&quot;&gt;http://www.apicloud.com&lt;/a&gt;)&lt;/a&gt;  &lt;/p&gt;
+&lt;h2&gt;二、 工具类&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.scm-manager.org/&quot;&gt;1. Git仓库管理工具--SCM-Manager (&lt;a href=&quot;https://www.scm-manager.org/&quot;&gt;https://www.scm-manager.org/&lt;/a&gt;)&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://jenkins.io/&quot;&gt;2. 持续集成工具--Jenkins (&lt;a href=&quot;https://jenkins.io/&quot;&gt;https://jenkins.io/&lt;/a&gt;)&lt;/a&gt;  &lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://regex101.com/&quot;&gt;3. 正则表达式核查工具(&lt;a href=&quot;https://regex101.com/&quot;&gt;https://regex101.com/&lt;/a&gt;)&lt;/a&gt;  &lt;/p&gt;
+&lt;h2&gt;三、 教育类&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;http://www.planetsforkids.org&quot;&gt;1. planets for kids (&lt;a href=&quot;http://www.planetsforkids.org&quot;&gt;http://www.planetsforkids.org&lt;/a&gt;) &lt;/a&gt;  &lt;/p&gt;
+&lt;h2&gt;四、 杂项&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/jockchou/gitblog&quot;&gt;1.使用Gitblog和Markdown搭建自己的博客网站 &lt;/a&gt;  &lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/jockchou/gitblog&quot;&gt;2.整合Wikitten和MDwiki搭建个人知识库 &lt;/a&gt;  &lt;/p&gt;
+&lt;p&gt;[3.战斗民族语言研究所-克林贡语]&lt;/p&gt;            </description>
+            <pubDate>2018-03-28 12:19:04</pubDate>
+            <link>http://www.sagaii.cn/blog/BestSite/bestsiteidx.html</link>
+            <guid isPermaLink="true">http://www.sagaii.cn/blog/BestSite/bestsiteidx.html</guid>
+                                               <category>SiteLink</category>
+                                    </item>
+                <item>
+            <title>欢迎使用GitBlog</title>
+            <description>
+            &lt;!--
+author: jockchou
+head: http://pingodata.qiniudn.com/jockchou-avatar.jpg
+date: 2015-07-31
+title: 欢迎使用GitBlog
+tags: GitBlog
+images: http://pingodata.qiniudn.com/cube2.jpg
+category: Others
+status: publish
+summary: GitBlog是一个简单易用的Markdown博客系统，它不需要数据库，没有管理后台功能，更新博客只需要添加你写好的Markdown文件即可。
+--&gt;
+&lt;h2&gt;一. 简介&lt;/h2&gt;
+&lt;p&gt;GitBlog是一个简单易用的Markdown博客系统，它不需要数据库，没有管理后台功能，更新博客只需要添加你写好的Markdown文件即可。它摆脱了在线编辑器排版困难，无法实时预览的缺点，一切都交给Markdown来完成，一篇博客就是一个Markdown文件。同时也支持评论，代码高亮，数学公式，页面PV统计等常用功能。GitBlog提供了不同的主题样式，你可以根据自己的喜好配置，如果你想自己制作博客主题，也是非常容易的。GitBlog还支持整站静态导出，你完全可以导出整站静态网页部署到Github Pages。&lt;/p&gt;
+&lt;h2&gt;二. 功能特点&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;使用Markdown  &lt;/li&gt;
+&lt;li&gt;评论框  &lt;/li&gt;
+&lt;li&gt;代码高亮  &lt;/li&gt;
+&lt;li&gt;PV统计  &lt;/li&gt;
+&lt;li&gt;Latex数学公式  &lt;/li&gt;
+&lt;li&gt;自制主题  &lt;/li&gt;
+&lt;li&gt;响应式  &lt;/li&gt;
+&lt;li&gt;全站静态导出  &lt;/li&gt;
+&lt;li&gt;良好的SEO  &lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;三. GitBlog优势&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;无需数据库，系统更轻量，移植更方便  &lt;/li&gt;
+&lt;li&gt;使用Markdown编写，摆脱后台编辑排版困难，无法实时预览的缺点  &lt;/li&gt;
+&lt;li&gt;可全站静态导出  &lt;/li&gt;
+&lt;li&gt;配置灵活，可自由开关某些功能  &lt;/li&gt;
+&lt;li&gt;多主题支持，可自制主题  &lt;/li&gt;
+&lt;li&gt;博客，分类，标签，归档  &lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;四. 环境要求&lt;/h2&gt;
+&lt;p&gt;PHP 5.2.4+&lt;/p&gt;
+&lt;h2&gt;五. 安装步骤&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;下载GitBlog源代码  &lt;/li&gt;
+&lt;li&gt;解压上传到你的PHP网站根目录  &lt;/li&gt;
+&lt;li&gt;打开浏览器，访问网站首页  &lt;/li&gt;
+&lt;li&gt;上传Markdown文件到&lt;code&gt;posts&lt;/code&gt;文件夹  &lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;六. 详细说明&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/install.md&quot;&gt;1. 安装&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/struct.md&quot;&gt;2. 目录结构&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/config.md&quot;&gt;3. 配置说明&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/edit.md&quot;&gt;4. 编写博客&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/other-func.md&quot;&gt;5. 评论，订阅，统计等&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/cache.md&quot;&gt;6. 缓存机制&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/export.md&quot;&gt;7. 全站静态导出&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/theme.md&quot;&gt;8. 主题制作&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/nginx.md&quot;&gt;9. 在Nginx上运行GitBlog&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/apache.md&quot;&gt;10. 在Apache上运行GitBlog&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/sae.md&quot;&gt;11. 在SAE上运行GitBlog&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/github-pages.md&quot;&gt;12. 使用GitBlog和Github Pages搭建博客&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/update.md&quot;&gt;13. Gitblog升级&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/wordpress.md&quot;&gt;14. 从wordpress导入&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;七. 问题及bug反馈&lt;/h2&gt;
+&lt;p&gt;如果在实际使用过程中对GitBlog有新的功能需求，或者在使用GitBlog的过程中发现了Bug，欢迎反馈给我。可以直接在Github上提交，也可以发邮件至&lt;code&gt;164068300[AT]qq.com&lt;/code&gt;与我取得联系，我将及时回复。如果你自己制作了漂亮好用的主题，也非常欢迎你提交给我，我会在这里展示你的主题链接。如果你正在使用GitBlog，也可以告诉我，我将也会在这里列出使用者名单。如果你想和其他GitBlog使用者讨论交流，欢迎加入QQ群&lt;code&gt;84692078&lt;/code&gt;。&lt;/p&gt;
+&lt;h2&gt;八. 使用者列表&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://blog.hiweeds.net&quot;&gt;Weeds&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://xiaochengzi.sinaapp.com&quot;&gt;橙子&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://jockchou.com&quot;&gt;jockchou&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://github.com/jockchou/gitblogdoc&quot;&gt;GitBlog Doc&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://zxy.link&quot;&gt;zxy&lt;/a&gt;  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;九. 感谢&lt;/h2&gt;
+&lt;p&gt;GitBlog的成长需要喜欢Markdown，喜欢写博客的各位亲们支持！感谢你们使用GitBlog，感激你们对Gitblog的良好建议与Bug反馈。&lt;/p&gt;
+&lt;p&gt;QQ群：&lt;code&gt;84692078&lt;/code&gt;&lt;br /&gt;
+作者邮箱：&lt;code&gt;164068300[AT]qq.com&lt;/code&gt;    &lt;/p&gt;            </description>
+            <pubDate>2018-03-28 12:19:04</pubDate>
+            <link>http://www.sagaii.cn/blog/welcome.html</link>
+            <guid isPermaLink="true">http://www.sagaii.cn/blog/welcome.html</guid>
+                                               <category>Others</category>
+                                    </item>
+            </channel>
+</rss>

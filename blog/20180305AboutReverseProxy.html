@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>关于反向代理的总结|赫拉迪克NPC</title>
+	<meta name="keywords" content="ReverseProxy,technology,赫拉迪克NPC">
+	<meta name="description" content=".">
+	
+	<link rel="stylesheet" href="../theme/sagaquest/assets/plugins/bootstrap/css/bootstrap.min.css?ver=2.3" type="text/css" media="all" />
+	<link rel="stylesheet" href="../theme/sagaquest/assets/plugins/font-awesome/css/font-awesome.min.css?ver=2.3" type="text/css" media="all" />
+	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600&subset=latin,latin-ext">
+	<link rel="stylesheet" href="../theme/sagaquest/css/style.css?ver=2.3" type="text/css" media="all" />
+	<link rel="stylesheet" href="../theme/sagaquest/css/customizer.css?ver=2.3" type="text/css" media="all" />
+
+	<link rel="alternate" type="application/rss+xml" title="赫拉迪克NPC" href="../feed.xml" />
+	
+	</head>
+
+<body class="home blog wide">
+	<div id="page" class="hfeed site">
+		<a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+		    <header id="masthead" class="main-header" role="banner">
+<div class="container">
+	<div class="row">
+		<div class="site-branding col-md-4">
+			<h1 class="site-title"><a href="../" rel="home">赫拉迪克NPC</a></h1>
+				<span class="site-description">necromancer</span>
+		</div>
+		<!-- .site-branding -->
+	</div>
+</div>
+</header>		    <div id="content">
+	<div class="quest-row site-content">
+		<div class="container">
+			<div class="row">
+				<div id="primary" class="content-area single col-md-9">
+					<div id="main" class="site-main" role="main">
+						<article class="post hentry">
+	<header class="entry-header">
+	<h1 class="post-title"><a href="../blog/20180305AboutReverseProxy.html" rel="bookmark">关于反向代理的总结 </a></h1>
+	<div class="entry-meta">
+		<time class="post-date"><i class="fa fa-clock-o"></i>2018-03-05</time>
+				<span class="seperator">/</span>
+	    <span><i class="fa fa-user"></i> sagaii</span>
+	    	</div><!-- .entry-meta -->
+</header><!-- .entry-header -->
+	<div class="entry-content">
+		<p>﻿<!--
+author: sagaii
+head: http://www.sagaii.cn/blog/img/zoltunsmall.png
+date: 2018-03-05
+title: 关于反向代理的总结
+tags:  ReverseProxy
+images: http://www.sagaii.cn/blog/img/zoltun.png
+category: technology
+status: publish
+summary: .
+--></p>
+<h2>一、 原由</h2>
+<p>单位服务器对外的域名和IP都有限制，最近端口也封锁的很严重，又搞了个安恒玄武盾，搞定好的功能都没办法使用。
+最初选择反向代理主要是希望通过网址的二级目录形式访问内网不同端口的web服务。开始选择的是Bonobo git server
+通过http方式提交代码，应该是最基本的吧，谁知url当中出现&quot;.&quot;就会被防火墙识别成威胁，最后选择了scm-manager。
+为此，专门学习了一下反向代理。</p>
+<h2>二、 反向代理原理</h2>
+<p>反向代理（Reverse Proxy）方式是指以代理服务器来接受Internet上的连接请求，然后将请求转发给内部网络上的服务器；并将从服务器上得到的结果返回给Internet上请求连接的客户端，此时代理服务器对外就表现为一个服务器。
+通常的代理服务器，只用于代理内部网络对Internet的连接请求，客户机必须指定代理服务器,并将本来要直接发送到Web服务器上的http请求发送到代理服务器中。当一个代理服务器能够代理外部网络上的主机，访问内部网络时，这种代理服务的方式称为反向代理服务。
+<img src="./img/rp.gif" alt="反向代理原理图" /></p>
+<h2>三、 IIS反向代理配置</h2>
+<p>配置IIS反向代理需要下载安装ARR（Application Request Routing）， <a href="http://www.iis.net/downloads/microsoft/application-request-routing">http://www.iis.net/downloads/microsoft/application-request-routing</a>
+安装完成后，IIS里会多出两个图标，分别是Application Request Routing和URL重写。注意：需要在IIS当中双击ApplicationRequest Routing，在右侧Server Proxy Settings里，将代理功能开启。</p>
+<p>IIS反向代理配置实质就是配置URL重写规则。IIS当中的URL重写规则分为“入站规则”和“出站规则”。简单的理解入站规则指的是外部用户通过浏览器向代理服务器提出的Get请求（通过浏览器调试工具中控制台可以查看）时应用的规则。出站规则指的是代理服务器接后台回传回来的数据后，通过反向代理服务器向用户端浏览器回传过程当中应用的规则。
+iis反向代理配置当中最难写的就是出站规则。 入站规则和出站规则当中对于url后面是否多一个“/”，往往也会带来不小的坑。
+出站规则建议先用向导配置，会产生一个判别文本是html的条件，如果缺少这个条件往往出站规则就会错误。</p>
+<h2>四、Nginx反向代理配置</h2>
+<p>nginx配置反向代理确实比较简单。 但是，nginx默认只支持类似iis的入站规则代理，即客户端提出get请求的时候，进行url的改写。另外，好像默认是启动了动静分离，静态内容（css,js）默认是从nginx代理服务器的目录当中访问，当启用了nginx反向代理，指向内网的服务器的时候，往往会丢失css和js。对于丢失css和js的解决方法是是采用rewrite语句改写get请求（url)，这带来的一个问题是css和js需要有一个相同的改写模式。 如果一个代理服务器要配置转向多个web网站的时候，往往会隐藏风险。</p>
+<p>总结：个人配置了iis反向代理，反而认为功能要比nginx强大，好用。 nginx虽然简单的配置html的代理简单，但是对于多个网站的同时反向代理不太合适。 实际上，最后2个反向代理方法都放弃了。 选择了FRP内网穿透功能。</p>
+<h2>五、正则表达式</h2>
+<p>不管是iis和nginx的反向代理，都需要用到正则表达式。 验证正则表达式最好的平台应该就是：
+<a href="https://regex101.com/">https://regex101.com/</a></p>
+<p>事实上，这个网站也是开源的，托管在github上。</p>
+	</div><!-- .entry-content -->	<footer class="entry-footer">
+		<ul class="post-categories">
+          
+          <li><a href="../category/technology.html" rel="category">technology</a></li>
+        	</ul>
+		
+		<ul class="post-tags">
+                   <li><a href="../tags/ReverseProxy.html" rel="tag">ReverseProxy</a></li>
+        	</ul>
+		
+	</footer><!-- .entry-footer --></article><!-- #post-## -->            			<div id="comments" class="clearfix">
+	<div id="container"></div>
+	    
+	    <!--gitment评论-->
+		<link rel="stylesheet" href="../theme/sagaquest/gitment/gitmentdefault.css" type="text/css" media="all" /> 
+		<script src="../theme/sagaquest/gitment/gitment.browser.js"></script> 
+
+	    <script>
+			var gitment = new Gitment({
+			  id: '', // 可选。默认为 location.href
+			  owner: 'sagaii',
+			  repo: 'sagaii.github.ioment',
+			  oauth: {
+			    client_id: '868aaedcfa2c103fbc49',
+			    client_secret: 'e2f87a817ca41a244e730148e111e2795df06d34',
+			  },
+			})
+			gitment.render('container')
+		</script> 
+</div>
+  
+ 					</div>
+					<!-- #main -->
+				</div>
+				<!-- #primary -->
+				<div id="secondary" class="widget-area main-sidebar col-md-3" role="complementary">
+	<aside class="widget widget_search sidebar-widget clearfix">
+	<h3 class="widget-title">搜索</h3>
+	<form class="search" action="/search" method="get">
+		<fieldset>
+			<div class="text">
+				<input name="keyword" id="keyword" type="text" placeholder="Search ..."/>
+				<button class="fa fa-search">Search</button>
+			</div>
+		</fieldset>
+	</form>
+</aside>
+	<aside class="widget widget_categories sidebar-widget clearfix">
+	<h3 class="widget-title">分类目录</h3>
+	<ul>
+		        <li class="cat-item"><a href="../category/technology.html" >technology</a></li>
+                <li class="cat-item"><a href="../category/SiteLink.html" >SiteLink</a></li>
+                <li class="cat-item"><a href="../category/Others.html" >Others</a></li>
+        	</ul>
+</aside>
+	<aside class="widget widget_archive sidebar-widget clearfix">
+	<h3 class="widget-title">文章归档</h3>
+	<ul>
+		<li><a href="../archive/201803.html">2018-03</a></li>
+		<li><a href="../archive/201801.html">2018-01</a></li>
+		<li><a href="../archive/201507.html">2015-07</a></li>
+		</ul>
+</aside>	<aside class="widget widget_recent_entries sidebar-widget clearfix">
+	<h3 class="widget-title">近期文章</h3>
+	<ul>
+	    <li><a href="../blog/20180327WinSW.html">注册Windows服务工具(WinSW) for gogs</a></li>
+        <li><a href="../blog/20180305AboutReverseProxy.html">关于反向代理的总结</a></li>
+        <li><a href="../blog/firstBlog.html">2018第一篇Blog</a></li>
+        <li><a href="../blog/BestSite/bestsiteidx.html">实用网站集</a></li>
+        <li><a href="../blog/welcome.html">欢迎使用GitBlog</a></li>
+    	</ul>
+</aside>
+	<aside class="widget widget_tag_cloud sidebar-widget clearfix">
+	<h3 class="widget-title">标签</h3>
+	<div class="tagcloud">
+		<a href="../tags/ReverseProxy.html"  title="ReverseProxy" >ReverseProxy</a>
+		<a href="../tags/WinSW.html"  title="WinSW" >WinSW</a>
+		<a href="../tags/SitesLink.html"  title="SitesLink" >SitesLink</a>
+		<a href="../tags/FirstBlog.html"  title="FirstBlog" >FirstBlog</a>
+		<a href="../tags/GitBlog.html"  title="GitBlog" >GitBlog</a>
+		</div>
+</aside>
+	<aside class="widget widget_text sidebar-widget clearfix">
+	<h3 class="widget-title">About Blog</h3>
+	<div class="textwidget">
+		<p>just record some mind and some technical skills.email me [cube_npc@foxmail.com]</p>
+	</div>
+</aside>
+</div><!-- #secondary -->			</div>
+			<!-- .row -->
+		</div>
+		<!-- .container -->
+	</div>
+	<!-- .quest-row -->
+</div>		    <footer id="colophon" class="copyright quest-row" role="contentinfo">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 copyright-text">
+				<a href="#">Copyright (C) 2018-  SAGAII</a>
+			</div>
+			<div class="col-md-6 social-icon-container clearfix">
+				<ul></ul>
+			</div>
+		</div>
+		<!-- end row -->
+	</div>
+	<!-- end container -->
+</footer>	</div><!-- #page -->
+	<a href="#0" class="cd-top"><i class="fa fa-angle-up"></i></a>
+
+<script type="text/javascript" src="../theme/sagaquest/assets/plugins/modernizr/modernizr.custom.js?ver=2.3"></script>
+<script type="text/javascript" src="../theme/sagaquest/js/jquery/jquery.js?ver=1.11.2"></script>
+<script type="text/javascript" src="../theme/sagaquest/js/jquery/jquery-migrate.min.js?ver=1.2.1"></script>
+<script type="text/javascript" src="../theme/sagaquest/assets/plugins/bootstrap/js/bootstrap.min.js?ver=2.3"></script>
+<script type="text/javascript" src="../theme/sagaquest/assets/plugins/wow/wow.js?ver=2.3"></script>
+<script type="text/javascript" src="../theme/sagaquest/assets/plugins/colorbox/jquery.colorbox-min.js?ver=2.3"></script>
+<script type="text/javascript" src="../theme/sagaquest/assets/js/quest.js?ver=2.3"></script>
+
+
+<link rel="stylesheet" href="http://cdn.bootcss.com/highlight.js/8.6/styles/default.min.css">
+<script src="http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script type="text/x-mathjax-config">MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});</script>
+<script type="text/javascript" src="http://cdn.bootcss.com/mathjax/2.5.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+</html>

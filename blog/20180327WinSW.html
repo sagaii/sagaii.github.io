@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>注册Windows服务工具(WinSW) for gogs|赫拉迪克NPC</title>
 	<meta name="keywords" content="WinSW,technology,赫拉迪克NPC">
-	<meta name="description" content=".">
+	<meta name="description" content="gogs winsw">
 	
 	<link rel="stylesheet" href="../theme/sagaquest/assets/plugins/bootstrap/css/bootstrap.min.css?ver=2.3" type="text/css" media="all" />
 	<link rel="stylesheet" href="../theme/sagaquest/assets/plugins/font-awesome/css/font-awesome.min.css?ver=2.3" type="text/css" media="all" />
@@ -55,7 +55,7 @@ tags:  WinSW
 images: http://www.sagaii.cn/blog/img/zoltun.png
 category: technology
 status: publish
-summary: .
+summary: gogs winsw
 --></p>
 <h2>一、 原由</h2>
 <p>近日，看到cnblog上介绍gogs，因前期我用的BonoBo.Git.Server缺少Personal Access Token功能，无法方面的与github,vsts，jenkins集成。
@@ -71,12 +71,8 @@ summary: .
        &lt;executable&gt;gogs.exe&lt;/executable&gt;
        &lt;arguments&gt; web --config  "D:\gogs\custom\conf\app.ini"&lt;/arguments&gt;
        &lt;logmode&gt;reset&lt;/logmode&gt;
-    &lt;/service&gt;
-
-把配置文件和可执行文件放在一起，打开一个管理员权限的命令提示符或Powershell窗口
-，然后输入winsw install 命令，如果返回值为0，说明已将程序注册为服务。
-
-如果不再需要这个服务，使用winsw uninstall即可卸载服务。</code></pre>
+    &lt;/service&gt;</code></pre>
+<p>把配置文件和可执行文件放在一起，打开一个管理员权限的命令提示符或Powershell窗口，然后输入winsw install 命令，如果返回值为0，说明已将程序注册为服务。 如果不再需要这个服务，使用winsw uninstall即可卸载服务。</p>
 	</div><!-- .entry-content -->	<footer class="entry-footer">
 		<ul class="post-categories">
           

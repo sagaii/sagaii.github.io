@@ -4,8 +4,8 @@
         <description>technical skills  blog</description>
         <link>http://www.sagaii.cn</link>
         <atom:link href="http://www.sagaii.cn/feed.xml" rel="self" type="application/rss+xml" />
-        <pubDate>2018-04-11 14:04:06</pubDate>
-        <lastBuildDate>2018-04-11 14:04:06</lastBuildDate>
+        <pubDate>2018-04-11 14:04:20</pubDate>
+        <lastBuildDate>2018-04-11 14:04:20</lastBuildDate>
         <generator>Gitblog v1.0</generator>
                 <item>
             <title>代码架构</title>
@@ -31,8 +31,8 @@ summary: architecture
 &lt;p&gt;如果你想学好DDD，一定要去看Microsoft NLayerApp项目&lt;/p&gt;
 &lt;p&gt;&lt;a href=&quot;https://www.cnblogs.com/lori/archive/2013/02/21/2920641.html&quot;&gt;https://www.cnblogs.com/lori/archive/2013/02/21/2920641.html&lt;/a&gt;&lt;/p&gt;
 &lt;h2&gt;三、 思考&lt;/h2&gt;
-&lt;pre&gt;&lt;code&gt;目前的代码架构主要采用NTier架构，这个架构模式下，又有clean architecture, onion architecture等等。&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;为了使得代码具有高内聚，低耦合，最新的策略是通过依赖注入(DI/Dependence injection)，实现控制反转（IoC/Inverse Of Control），实现解耦。
+&lt;p&gt;目前的代码架构主要采用NTier架构，这个架构模式下，又有clean architecture, onion architecture等等。
+为了使得代码具有高内聚，低耦合，最新的策略是通过依赖注入(DI/Dependence injection)，实现控制反转（IoC/Inverse Of Control），实现解耦。
 主要框架有autofac, Ninject,Spring.NET，Unity，Castle等。主要思想方法是领域驱动设计（DDD）。
 我考虑的代码架构参考clean architecture. 各层直接要解耦，只有Entity层是所有层都能访问。
 基本框架如下：&lt;/p&gt;
@@ -47,7 +47,7 @@ summary: architecture
                    V              V    V
                   NTierApplication.Entity&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;源代码下载地址： &lt;a href=&quot;https://github.com/SagaSrc/NTierApplication&quot;&gt;https://github.com/SagaSrc/NTierApplication&lt;/a&gt;&lt;/p&gt;            </description>
-            <pubDate>2018-04-11 14:08:02</pubDate>
+            <pubDate>2018-04-11 14:11:18</pubDate>
             <link>http://www.sagaii.cn/blog/20180408architecture.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/20180408architecture.html</guid>
                                                <category>technology</category>
@@ -82,7 +82,7 @@ summary: gogs winsw
        &amp;lt;logmode&amp;gt;reset&amp;lt;/logmode&amp;gt;
     &amp;lt;/service&amp;gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;把配置文件和可执行文件放在一起，打开一个管理员权限的命令提示符或Powershell窗口，然后输入winsw install 命令，如果返回值为0，说明已将程序注册为服务。 如果不再需要这个服务，使用winsw uninstall即可卸载服务。&lt;/p&gt;            </description>
-            <pubDate>2018-04-11 14:08:02</pubDate>
+            <pubDate>2018-04-11 14:11:18</pubDate>
             <link>http://www.sagaii.cn/blog/20180327WinSW.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/20180327WinSW.html</guid>
                                                <category>technology</category>
@@ -123,7 +123,7 @@ iis反向代理配置当中最难写的就是出站规则。 入站规则和出�
 &lt;p&gt;不管是iis和nginx的反向代理，都需要用到正则表达式。 验证正则表达式最好的平台应该就是：
 &lt;a href=&quot;https://regex101.com/&quot;&gt;https://regex101.com/&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;事实上，这个网站也是开源的，托管在github上。&lt;/p&gt;            </description>
-            <pubDate>2018-04-11 14:08:02</pubDate>
+            <pubDate>2018-04-11 14:11:18</pubDate>
             <link>http://www.sagaii.cn/blog/20180305AboutReverseProxy.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/20180305AboutReverseProxy.html</guid>
                                                <category>technology</category>
@@ -166,7 +166,7 @@ summary: 2018乱弹Blog.
 &lt;/ol&gt;
 &lt;h2&gt;四、联系交流&lt;/h2&gt;
 &lt;pre&gt;&lt;code&gt;  Email to me , sagaii :  cube_npc@foxmail.com            &lt;/code&gt;&lt;/pre&gt;            </description>
-            <pubDate>2018-04-11 14:08:02</pubDate>
+            <pubDate>2018-04-11 14:11:18</pubDate>
             <link>http://www.sagaii.cn/blog/firstBlog.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/firstBlog.html</guid>
                                                <category>Others</category>
@@ -200,7 +200,7 @@ summary: 记录一些非常实用的网站.
 &lt;p&gt;&lt;a href=&quot;https://github.com/jockchou/gitblog&quot;&gt;1.使用Gitblog和Markdown搭建自己的博客网站 &lt;/a&gt;  &lt;/p&gt;
 &lt;p&gt;&lt;a href=&quot;https://github.com/jockchou/gitblog&quot;&gt;2.整合Wikitten和MDwiki搭建个人知识库 &lt;/a&gt;  &lt;/p&gt;
 &lt;p&gt;[3.战斗民族语言研究所-克林贡语]&lt;/p&gt;            </description>
-            <pubDate>2018-04-11 14:08:02</pubDate>
+            <pubDate>2018-04-11 14:11:18</pubDate>
             <link>http://www.sagaii.cn/blog/BestSite/bestsiteidx.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/BestSite/bestsiteidx.html</guid>
                                                <category>SiteLink</category>
@@ -280,7 +280,7 @@ summary: GitBlog是一个简单易用的Markdown博客系统，它不需要数�
 &lt;p&gt;GitBlog的成长需要喜欢Markdown，喜欢写博客的各位亲们支持！感谢你们使用GitBlog，感激你们对Gitblog的良好建议与Bug反馈。&lt;/p&gt;
 &lt;p&gt;QQ群：&lt;code&gt;84692078&lt;/code&gt;&lt;br /&gt;
 作者邮箱：&lt;code&gt;164068300[AT]qq.com&lt;/code&gt;    &lt;/p&gt;            </description>
-            <pubDate>2018-04-11 14:08:02</pubDate>
+            <pubDate>2018-04-11 14:11:18</pubDate>
             <link>http://www.sagaii.cn/blog/welcome.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/welcome.html</guid>
                                                <category>Others</category>

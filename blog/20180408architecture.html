@@ -67,8 +67,8 @@ summary: architecture
 <p>如果你想学好DDD，一定要去看Microsoft NLayerApp项目</p>
 <p><a href="https://www.cnblogs.com/lori/archive/2013/02/21/2920641.html">https://www.cnblogs.com/lori/archive/2013/02/21/2920641.html</a></p>
 <h2>三、 思考</h2>
-<pre><code>目前的代码架构主要采用NTier架构，这个架构模式下，又有clean architecture, onion architecture等等。</code></pre>
-<p>为了使得代码具有高内聚，低耦合，最新的策略是通过依赖注入(DI/Dependence injection)，实现控制反转（IoC/Inverse Of Control），实现解耦。
+<p>目前的代码架构主要采用NTier架构，这个架构模式下，又有clean architecture, onion architecture等等。
+为了使得代码具有高内聚，低耦合，最新的策略是通过依赖注入(DI/Dependence injection)，实现控制反转（IoC/Inverse Of Control），实现解耦。
 主要框架有autofac, Ninject,Spring.NET，Unity，Castle等。主要思想方法是领域驱动设计（DDD）。
 我考虑的代码架构参考clean architecture. 各层直接要解耦，只有Entity层是所有层都能访问。
 基本框架如下：</p>

@@ -3,9 +3,9 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>赫拉迪克NPC</title>
-	<meta name="keywords" content="ReverseProxy,blog,赫拉迪克NPC">
-	<meta name="description" content="technical skills  blog">
+	<title>代码架构|赫拉迪克NPC</title>
+	<meta name="keywords" content="architecture,technology,赫拉迪克NPC">
+	<meta name="description" content="architecture">
 	
 	<link rel="stylesheet" href="../theme/sagaquest/assets/plugins/bootstrap/css/bootstrap.min.css?ver=2.3" type="text/css" media="all" />
 	<link rel="stylesheet" href="../theme/sagaquest/assets/plugins/font-awesome/css/font-awesome.min.css?ver=2.3" type="text/css" media="all" />
@@ -31,38 +31,58 @@
 	</div>
 </div>
 </header>		    <div id="content">
-		    		    	    	
-    	    		<div class="quest-row" id="title-container">
-	<div class="container title-container">
-		<div class="row">
-			<div class="col-md-6">
-								<h3>ReverseProxy</h3>
-							</div>
-			<div class="col-md-6">
-				<ul class="breadcrumbs">
-					<li><a href="../">Home</a></li>
-										<li>ReverseProxy</li>
-									</ul>
-				</div>
-		</div>
-	</div>
-</div>
-    		<div class="quest-row site-content">
+	<div class="quest-row site-content">
 		<div class="container">
 			<div class="row">
-				<div id="primary" class="content-area col-md-9">
+				<div id="primary" class="content-area single col-md-9">
 					<div id="main" class="site-main" role="main">
-																										        	<article class="post hentry">
+						<article class="post hentry">
 	<header class="entry-header">
-	<h1 class="post-title"><a href="../blog/20180305AboutReverseProxy.html" rel="bookmark">关于反向代理的总结 </a></h1>
+	<h1 class="post-title"><a href="../blog/20180408architecture.html" rel="bookmark">代码架构 </a></h1>
 	<div class="entry-meta">
-		<time class="post-date"><i class="fa fa-clock-o"></i>2018-03-05</time>
+		<time class="post-date"><i class="fa fa-clock-o"></i>2018-04-08</time>
 				<span class="seperator">/</span>
 	    <span><i class="fa fa-user"></i> sagaii</span>
 	    	</div><!-- .entry-meta -->
 </header><!-- .entry-header -->
 	<div class="entry-content">
-		<p>.</p>
+		<p>﻿<!--
+author: sagaii
+head: http://www.sagaii.cn/blog/img/zoltunsmall.png
+date: 2018-04-08
+title: 代码架构
+tags:  architecture
+images: http://www.sagaii.cn/blog/img/zoltun.png
+category: technology
+status: publish
+summary: architecture
+--></p>
+<h2>一、 起因</h2>
+<p>最近想写一套类似lua的项目管理程序，学习了在sourceforge.net上的luaedit2010的源代码，总感觉代码架构不清晰。
+代码间关系复杂。为此，学习了一下目前主要的架构和模式。</p>
+<h2>二、 记录</h2>
+<p>如果你想学好.net，一定要看.net framworks源代码</p>
+<p>如果你想学好分层结构，一定要去看petshop项目</p>
+<p>如果你想学好MVC，一定要去看dinner项目</p>
+<p>如果你想学好DDD，一定要去看Microsoft NLayerApp项目</p>
+<p><a href="https://www.cnblogs.com/lori/archive/2013/02/21/2920641.html">https://www.cnblogs.com/lori/archive/2013/02/21/2920641.html</a></p>
+<h2>三、 思考</h2>
+<pre><code>目前的代码架构主要采用NTier架构，这个架构模式下，又有clean architecture, onion architecture等等。</code></pre>
+<p>为了使得代码具有高内聚，低耦合，最新的策略是通过依赖注入(DI/Dependence injection)，实现控制反转（IoC/Inverse Of Control），实现解耦。
+主要框架有autofac, Ninject,Spring.NET，Unity，Castle等。主要思想方法是领域驱动设计（DDD）。
+我考虑的代码架构参考clean architecture. 各层直接要解耦，只有Entity层是所有层都能访问。
+基本框架如下：</p>
+<pre><code>                        NTierApplication.UI
+                           |           |
+                           V           |
+                 NTierApplication.BLL  |
+                   |              |    |
+                   V              |    |
+          NTierApplication.DAL    |    |
+                   |              |    |
+                   V              V    V
+                  NTierApplication.Entity</code></pre>
+<p>源代码下载地址： <a href="https://github.com/SagaSrc/NTierApplication">https://github.com/SagaSrc/NTierApplication</a></p>
 	</div><!-- .entry-content -->	<footer class="entry-footer">
 		<ul class="post-categories">
           
@@ -70,15 +90,34 @@
         	</ul>
 		
 		<ul class="post-tags">
-                   <li><a href="../tags/ReverseProxy.html" rel="tag">ReverseProxy</a></li>
+                   <li><a href="../tags/architecture.html" rel="tag">architecture</a></li>
         	</ul>
 		
-		<div class="read-more">
-		<a href="../blog/20180305AboutReverseProxy.html">阅读全文<i class="fa fa-angle-double-right "></i></a>
-	</div>
-	</footer><!-- .entry-footer --></article><!-- #post-## -->					        						        																		</div>
+	</footer><!-- .entry-footer --></article><!-- #post-## -->            			<div id="comments" class="clearfix">
+	<div id="container"></div>
+	    
+	    <!--gitment评论-->
+		<link rel="stylesheet" href="../theme/sagaquest/gitment/gitmentdefault.css" type="text/css" media="all" /> 
+		<script src="../theme/sagaquest/gitment/gitment.browser.js"></script> 
+
+	    <script>
+			var gitment = new Gitment({
+			  id: '', // 可选。默认为 location.href
+			  owner: 'sagaii',
+			  repo: 'sagaii.github.ioment',
+			  oauth: {
+			    client_id: '868aaedcfa2c103fbc49',
+			    client_secret: 'e2f87a817ca41a244e730148e111e2795df06d34',
+			  },
+			})
+			gitment.render('container')
+		</script> 
+</div>
+  
+ 					</div>
 					<!-- #main -->
 				</div>
+				<!-- #primary -->
 				<div id="secondary" class="widget-area main-sidebar col-md-3" role="complementary">
 	<aside class="widget widget_search sidebar-widget clearfix">
 	<h3 class="widget-title">搜索</h3>
@@ -140,7 +179,7 @@
 		<!-- .container -->
 	</div>
 	<!-- .quest-row -->
-</div><!-- #content -->		    <footer id="colophon" class="copyright quest-row" role="contentinfo">
+</div>		    <footer id="colophon" class="copyright quest-row" role="contentinfo">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-6 copyright-text">

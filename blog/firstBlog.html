@@ -68,11 +68,11 @@ summary: 2018乱弹Blog.
 </ol>
 <h2>三、 关于本Blog系统</h2>
 <p>本Blog系统是基于GitBlog系统搭建（感谢作者），expert 全站静态页面。
-后台支持程序有 scm-manager, jenkins, github .</p>
+后台支持程序有 gogs, jenkins, github .</p>
 <p>基本工作流程如下：</p>
 <ol>
 <li>用atom撰写文字（客户机，笔记本等）</li>
-<li>git上传到scm-manager系统（服务器1）（git-server系统部署在单位内网，通过配置FRP穿透访问（服务器2））</li>
+<li>git上传到gogs系统（服务器1）（git-server系统部署在单位内网，通过配置FRP穿透访问（服务器2））</li>
 <li>配置jenkins任务（服务器1），定时下载git库当中的文档，使用gitblog 导出全站命令生成静态页面</li>
 <li>
 <p>配置jenkins任务（服务器1），定时上传静态页面到github.</p>

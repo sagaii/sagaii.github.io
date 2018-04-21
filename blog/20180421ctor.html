@@ -3,9 +3,9 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>注册Windows服务工具(WinSW) for gogs|赫拉迪克NPC</title>
-	<meta name="keywords" content="WinSW,technology,赫拉迪克NPC">
-	<meta name="description" content="gogs winsw">
+	<title>构造函数与析构函数|赫拉迪克NPC</title>
+	<meta name="keywords" content="ctor,technology,赫拉迪克NPC">
+	<meta name="description" content="ctor &amp;amp; dtor">
 	
 	<link rel="stylesheet" href="../theme/sagaquest/assets/plugins/bootstrap/css/bootstrap.min.css?ver=2.3" type="text/css" media="all" />
 	<link rel="stylesheet" href="../theme/sagaquest/assets/plugins/font-awesome/css/font-awesome.min.css?ver=2.3" type="text/css" media="all" />
@@ -38,9 +38,9 @@
 					<div id="main" class="site-main" role="main">
 						<article class="post hentry">
 	<header class="entry-header">
-	<h1 class="post-title"><a href="../blog/20180327WinSW.html" rel="bookmark">注册Windows服务工具(WinSW) for gogs </a></h1>
+	<h1 class="post-title"><a href="../blog/20180421ctor.html" rel="bookmark">构造函数与析构函数 </a></h1>
 	<div class="entry-meta">
-		<time class="post-date"><i class="fa fa-clock-o"></i>2018-03-05</time>
+		<time class="post-date"><i class="fa fa-clock-o"></i>2018-04-21</time>
 				<span class="seperator">/</span>
 	    <span><i class="fa fa-user"></i> sagaii</span>
 	    	</div><!-- .entry-meta -->
@@ -49,30 +49,25 @@
 		<p>﻿<!--
 author: sagaii
 head: http://www.sagaii.cn/blog/img/zoltunsmall.png
-date: 2018-03-05
-title: 注册Windows服务工具(WinSW) for gogs
-tags:  WinSW
+date: 2018-04-21
+title: 构造函数与析构函数
+tags:  ctor
 images: http://www.sagaii.cn/blog/img/zoltun.png
 category: technology
 status: publish
-summary: gogs winsw
+summary: ctor & dtor
 --></p>
-<h2>一、 原由</h2>
-<p>近日，看到cnblog上介绍gogs，因前期我用的BonoBo.Git.Server缺少Personal Access Token功能，无法方面的与github,vsts，jenkins集成。
-试用了gogs，发现确实是一款良心之作，如其宣传的“一款极易搭建的自助 Git 服务”（作为中国的一款opensource系统，值得点赞）。
-不过，其介绍的使用内置windows服务功能配置windows服务，很容易失败，其推荐的NSSM好像又貌似复杂（其实也挺简单）。因此，自己又用了一下WinSW.</p>
-<h2>二、 WinSW</h2>
-<p>winsw可以将Windows上的任何一个程序注册为服务，如果不需要，也可以方便的卸载服务。 它是一个单个的可执行文件，可以到https://github.com/kohsuke/winsw/releases下载。winsw可以运行在.NET2和.NET4两个版本上。</p>
-<p>使用前，需要编写一个和程序同名的XML文件作为winsw的配置文件。以下是我配置gogs的参数：</p>
-<pre><code>     &lt;service&gt;
-       &lt;id&gt;gogs&lt;/id&gt;
-       &lt;name&gt;gogs&lt;/name&gt;
-       &lt;description&gt;go git service(port3000)&lt;/description&gt;
-       &lt;executable&gt;gogs.exe&lt;/executable&gt;
-       &lt;arguments&gt; web --config  "D:\gogs\custom\conf\app.ini"&lt;/arguments&gt;
-       &lt;logmode&gt;reset&lt;/logmode&gt;
-    &lt;/service&gt;</code></pre>
-<p>把配置文件和可执行文件放在一起，打开一个管理员权限的命令提示符或Powershell窗口，然后输入winsw install 命令，如果返回值为0，说明已将程序注册为服务。 如果不再需要这个服务，使用winsw uninstall即可卸载服务。</p>
+<h2>一、 构造函数</h2>
+<p>构造函数 ，是一种特殊的方法。主要用来在创建对象时初始化对象， 即为对象成员变量赋初始值，总与new运算符一起使用在创建对象的语句中。</p>
+<p>构造函数的命名必须和类名完全相同。</p>
+<p>类应该在构造函数执行完后才完成创建。</p>
+<p>C#当中用 ctor 表示构造函数。 ctor是单词constructor的缩写。</p>
+<p>在vs编辑器当中 输入 ctor 后，按tab键2次可自动创建构造函数框架。</p>
+<h2>二、 析构函数</h2>
+<p>析构函数(destructor) 与构造函数相反，当对象结束其生命周期时（例如对象所在的函数已调用完毕），系统自动执行析构函数。析构函数往往用来做“清理善后” 的工作，如：释放内存。</p>
+<p>dtor 是单词destructor的缩写。</p>
+<p>在C#当中析构函数与C++一样，采用~符号开头加上类名来定义。</p>
+<p>在C#和Java当中由于有垃圾回收机制，因此在对象生命周期结束后，系统会自动销毁对象。</p>
 	</div><!-- .entry-content -->	<footer class="entry-footer">
 		<ul class="post-categories">
           
@@ -80,7 +75,7 @@ summary: gogs winsw
         	</ul>
 		
 		<ul class="post-tags">
-                   <li><a href="../tags/WinSW.html" rel="tag">WinSW</a></li>
+                   <li><a href="../tags/ctor.html" rel="tag">ctor</a></li>
         	</ul>
 		
 	</footer><!-- .entry-footer --></article><!-- #post-## -->            			<div id="comments" class="clearfix">

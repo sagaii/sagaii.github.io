@@ -3,9 +3,9 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>赫拉迪克NPC</title>
-	<meta name="keywords" content="SitesLink,blog,赫拉迪克NPC">
-	<meta name="description" content="technical skills  blog">
+	<title>图像切割|赫拉迪克NPC</title>
+	<meta name="keywords" content="technology,赫拉迪克NPC">
+	<meta name="description" content="cut image">
 	
 	<link rel="stylesheet" href="../theme/sagaquest/assets/plugins/bootstrap/css/bootstrap.min.css?ver=2.3" type="text/css" media="all" />
 	<link rel="stylesheet" href="../theme/sagaquest/assets/plugins/font-awesome/css/font-awesome.min.css?ver=2.3" type="text/css" media="all" />
@@ -31,54 +31,79 @@
 	</div>
 </div>
 </header>		    <div id="content">
-		    		    	    	
-    	    		<div class="quest-row" id="title-container">
-	<div class="container title-container">
-		<div class="row">
-			<div class="col-md-6">
-								<h3>SitesLink</h3>
-							</div>
-			<div class="col-md-6">
-				<ul class="breadcrumbs">
-					<li><a href="../">Home</a></li>
-										<li>SitesLink</li>
-									</ul>
-				</div>
-		</div>
-	</div>
-</div>
-    		<div class="quest-row site-content">
+	<div class="quest-row site-content">
 		<div class="container">
 			<div class="row">
-				<div id="primary" class="content-area col-md-9">
+				<div id="primary" class="content-area single col-md-9">
 					<div id="main" class="site-main" role="main">
-																										        	<article class="post hentry">
+						<article class="post hentry">
 	<header class="entry-header">
-	<h1 class="post-title"><a href="../blog/BestSite/bestsiteidx.html" rel="bookmark">实用网站集 </a></h1>
+	<h1 class="post-title"><a href="../blog/20180428cutimage.html" rel="bookmark">图像切割 </a></h1>
 	<div class="entry-meta">
-		<time class="post-date"><i class="fa fa-clock-o"></i>2018-01-14</time>
+		<time class="post-date"><i class="fa fa-clock-o"></i>2018-04-21</time>
 				<span class="seperator">/</span>
 	    <span><i class="fa fa-user"></i> sagaii</span>
 	    	</div><!-- .entry-meta -->
 </header><!-- .entry-header -->
 	<div class="entry-content">
-		<p>记录一些非常实用的网站.</p>
+		<p>﻿<!--
+author: sagaii
+head: http://www.sagaii.cn/blog/img/zoltunsmall.png
+date: 2018-04-21
+title: 图像切割
+tags:  
+images: http://www.sagaii.cn/blog/img/zoltun.png
+category: technology
+status: publish
+summary: cut image
+--></p>
+<h2>一、 图像切割</h2>
+<p>以下是关键代码：</p>
+<pre><code>    using (Bitmap bitmap = new Bitmap(dstWidth, dstHeight))
+      {
+          using (Graphics g = Graphics.FromImage(bitmap))
+          {
+              using (Image img = Image.FromFile(srcImagePath))
+              {
+                  g.DrawImage(img, new Rectangle(0, 0, dstWidth, dstHeight),
+                      new Rectangle(srcX, srcY, srcWidth, srcHeight), GraphicsUnit.Pixel);
+                  g.Save();
+                  bitmap.Save(Path.Combine(SavePath, dstImagePath));
+              }
+          }
+      }</code></pre>
 	</div><!-- .entry-content -->	<footer class="entry-footer">
 		<ul class="post-categories">
           
-          <li><a href="../category/SiteLink.html" rel="category">SiteLink</a></li>
+          <li><a href="../category/technology.html" rel="category">technology</a></li>
         	</ul>
 		
-		<ul class="post-tags">
-                   <li><a href="../tags/SitesLink.html" rel="tag">SitesLink</a></li>
-        	</ul>
 		
-		<div class="read-more">
-		<a href="../blog/BestSite/bestsiteidx.html">阅读全文<i class="fa fa-angle-double-right "></i></a>
-	</div>
-	</footer><!-- .entry-footer --></article><!-- #post-## -->					        						        																		</div>
+	</footer><!-- .entry-footer --></article><!-- #post-## -->            			<div id="comments" class="clearfix">
+	<div id="container"></div>
+	    
+	    <!--gitment评论-->
+		<link rel="stylesheet" href="../theme/sagaquest/gitment/gitmentdefault.css" type="text/css" media="all" /> 
+		<script src="../theme/sagaquest/gitment/gitment.browser.js"></script> 
+
+	    <script>
+			var gitment = new Gitment({
+			  id: '', // 可选。默认为 location.href
+			  owner: 'sagaii',
+			  repo: 'sagaii.github.ioment',
+			  oauth: {
+			    client_id: '868aaedcfa2c103fbc49',
+			    client_secret: 'e2f87a817ca41a244e730148e111e2795df06d34',
+			  },
+			})
+			gitment.render('container')
+		</script> 
+</div>
+  
+ 					</div>
 					<!-- #main -->
 				</div>
+				<!-- #primary -->
 				<div id="secondary" class="widget-area main-sidebar col-md-3" role="complementary">
 	<aside class="widget widget_search sidebar-widget clearfix">
 	<h3 class="widget-title">搜索</h3>
@@ -141,7 +166,7 @@
 		<!-- .container -->
 	</div>
 	<!-- .quest-row -->
-</div><!-- #content -->		    <footer id="colophon" class="copyright quest-row" role="contentinfo">
+</div>		    <footer id="colophon" class="copyright quest-row" role="contentinfo">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-6 copyright-text">

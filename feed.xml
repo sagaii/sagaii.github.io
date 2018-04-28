@@ -4,9 +4,43 @@
         <description>technical skills  blog</description>
         <link>http://www.sagaii.cn</link>
         <atom:link href="http://www.sagaii.cn/feed.xml" rel="self" type="application/rss+xml" />
-        <pubDate>2018-04-21 23:04:35</pubDate>
-        <lastBuildDate>2018-04-21 23:04:35</lastBuildDate>
+        <pubDate>2018-04-28 11:04:04</pubDate>
+        <lastBuildDate>2018-04-28 11:04:04</lastBuildDate>
         <generator>Gitblog v1.0</generator>
+                <item>
+            <title>图像切割</title>
+            <description>
+            &lt;p&gt;﻿&lt;!--
+author: sagaii
+head: http://www.sagaii.cn/blog/img/zoltunsmall.png
+date: 2018-04-21
+title: 图像切割
+tags:  
+images: http://www.sagaii.cn/blog/img/zoltun.png
+category: technology
+status: publish
+summary: cut image
+--&gt;&lt;/p&gt;
+&lt;h2&gt;一、 图像切割&lt;/h2&gt;
+&lt;p&gt;以下是关键代码：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    using (Bitmap bitmap = new Bitmap(dstWidth, dstHeight))
+      {
+          using (Graphics g = Graphics.FromImage(bitmap))
+          {
+              using (Image img = Image.FromFile(srcImagePath))
+              {
+                  g.DrawImage(img, new Rectangle(0, 0, dstWidth, dstHeight),
+                      new Rectangle(srcX, srcY, srcWidth, srcHeight), GraphicsUnit.Pixel);
+                  g.Save();
+                  bitmap.Save(Path.Combine(SavePath, dstImagePath));
+              }
+          }
+      }&lt;/code&gt;&lt;/pre&gt;            </description>
+            <pubDate>2018-04-28 11:36:03</pubDate>
+            <link>http://www.sagaii.cn/blog/20180428cutimage.html</link>
+            <guid isPermaLink="true">http://www.sagaii.cn/blog/20180428cutimage.html</guid>
+                                               <category>technology</category>
+                                    </item>
                 <item>
             <title>构造函数与析构函数</title>
             <description>
@@ -32,7 +66,7 @@ summary: ctor &amp; dtor
 &lt;p&gt;dtor 是单词destructor的缩写。&lt;/p&gt;
 &lt;p&gt;在C#当中析构函数与C++一样，采用~符号开头加上类名来定义。&lt;/p&gt;
 &lt;p&gt;在C#和Java当中由于有垃圾回收机制，因此在对象生命周期结束后，系统会自动销毁对象。&lt;/p&gt;            </description>
-            <pubDate>2018-04-21 23:32:33</pubDate>
+            <pubDate>2018-04-28 11:36:03</pubDate>
             <link>http://www.sagaii.cn/blog/20180421ctor.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/20180421ctor.html</guid>
                                                <category>technology</category>
@@ -77,7 +111,7 @@ summary: architecture
                    V              V    V
                   NTierApplication.Entity&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;源代码下载地址： &lt;a href=&quot;https://github.com/SagaSrc/NTierApplication&quot;&gt;https://github.com/SagaSrc/NTierApplication&lt;/a&gt;&lt;/p&gt;            </description>
-            <pubDate>2018-04-21 23:32:33</pubDate>
+            <pubDate>2018-04-28 11:36:03</pubDate>
             <link>http://www.sagaii.cn/blog/20180408architecture.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/20180408architecture.html</guid>
                                                <category>technology</category>
@@ -112,7 +146,7 @@ summary: gogs winsw
        &amp;lt;logmode&amp;gt;reset&amp;lt;/logmode&amp;gt;
     &amp;lt;/service&amp;gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;把配置文件和可执行文件放在一起，打开一个管理员权限的命令提示符或Powershell窗口，然后输入winsw install 命令，如果返回值为0，说明已将程序注册为服务。 如果不再需要这个服务，使用winsw uninstall即可卸载服务。&lt;/p&gt;            </description>
-            <pubDate>2018-04-21 23:32:33</pubDate>
+            <pubDate>2018-04-28 11:36:03</pubDate>
             <link>http://www.sagaii.cn/blog/20180327WinSW.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/20180327WinSW.html</guid>
                                                <category>technology</category>
@@ -153,7 +187,7 @@ iis反向代理配置当中最难写的就是出站规则。 入站规则和出�
 &lt;p&gt;不管是iis和nginx的反向代理，都需要用到正则表达式。 验证正则表达式最好的平台应该就是：
 &lt;a href=&quot;https://regex101.com/&quot;&gt;https://regex101.com/&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;事实上，这个网站也是开源的，托管在github上。&lt;/p&gt;            </description>
-            <pubDate>2018-04-21 23:32:33</pubDate>
+            <pubDate>2018-04-28 11:36:03</pubDate>
             <link>http://www.sagaii.cn/blog/20180305AboutReverseProxy.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/20180305AboutReverseProxy.html</guid>
                                                <category>technology</category>
@@ -196,7 +230,7 @@ summary: 2018乱弹Blog.
 &lt;/ol&gt;
 &lt;h2&gt;四、联系交流&lt;/h2&gt;
 &lt;pre&gt;&lt;code&gt;  Email to me , sagaii :  cube_npc@foxmail.com            &lt;/code&gt;&lt;/pre&gt;            </description>
-            <pubDate>2018-04-21 23:32:33</pubDate>
+            <pubDate>2018-04-28 11:36:03</pubDate>
             <link>http://www.sagaii.cn/blog/firstBlog.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/firstBlog.html</guid>
                                                <category>Others</category>
@@ -230,7 +264,7 @@ summary: 记录一些非常实用的网站.
 &lt;p&gt;&lt;a href=&quot;https://github.com/jockchou/gitblog&quot;&gt;1.使用Gitblog和Markdown搭建自己的博客网站 &lt;/a&gt;  &lt;/p&gt;
 &lt;p&gt;&lt;a href=&quot;https://github.com/jockchou/gitblog&quot;&gt;2.整合Wikitten和MDwiki搭建个人知识库 &lt;/a&gt;  &lt;/p&gt;
 &lt;p&gt;[3.战斗民族语言研究所-克林贡语]&lt;/p&gt;            </description>
-            <pubDate>2018-04-21 23:32:33</pubDate>
+            <pubDate>2018-04-28 11:36:03</pubDate>
             <link>http://www.sagaii.cn/blog/BestSite/bestsiteidx.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/BestSite/bestsiteidx.html</guid>
                                                <category>SiteLink</category>
@@ -310,7 +344,7 @@ summary: GitBlog。
 &lt;p&gt;GitBlog的成长需要喜欢Markdown，喜欢写博客的各位亲们支持！感谢你们使用GitBlog，感激你们对Gitblog的良好建议与Bug反馈。&lt;/p&gt;
 &lt;p&gt;QQ群：&lt;code&gt;84692078&lt;/code&gt;&lt;br /&gt;
 作者邮箱：&lt;code&gt;164068300[AT]qq.com&lt;/code&gt;    &lt;/p&gt;            </description>
-            <pubDate>2018-04-21 23:32:33</pubDate>
+            <pubDate>2018-04-28 11:36:03</pubDate>
             <link>http://www.sagaii.cn/blog/welcome.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/welcome.html</guid>
                                                <category>Others</category>

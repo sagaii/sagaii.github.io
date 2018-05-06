@@ -4,9 +4,56 @@
         <description>technical skills  blog</description>
         <link>http://www.sagaii.cn</link>
         <atom:link href="http://www.sagaii.cn/feed.xml" rel="self" type="application/rss+xml" />
-        <pubDate>2018-05-06 08:05:48</pubDate>
-        <lastBuildDate>2018-05-06 08:05:48</lastBuildDate>
+        <pubDate>2018-05-06 09:05:19</pubDate>
+        <lastBuildDate>2018-05-06 09:05:19</lastBuildDate>
         <generator>Gitblog v1.0</generator>
+                <item>
+            <title>EmguCV Mat元素访问的方法 (emgucv3.4)</title>
+            <description>
+            &lt;p&gt;﻿&lt;!--
+author: sagaii
+head: http://www.sagaii.cn/blog/img/zoltunsmall.png
+date: 2018-05-06
+title: EmguCV Mat元素访问的方法 (emgucv3.4)
+tags:  
+images: http://www.sagaii.cn/blog/img/zoltun.png
+category: technology
+status: publish
+summary: RT.
+--&gt;&lt;/p&gt;
+&lt;h2&gt;一、  OpenCV Mat类&lt;/h2&gt;
+&lt;p&gt;Mat是一个类，由两个数据部分组成：矩阵头（包含矩阵尺寸、存储方法、存储地址等信息）和一个指向存储所有像素值矩阵的指针。每个Mat对象有自己的信息头，但共享同一个矩阵。这通过让矩阵指向同一地址而实现。而拷贝构造函数则只是复制信息头和矩阵指针，而不是复制矩阵。因此Mat类的对象作为参数传给子函数时，既可以以地址的形式传给子函数，也可以以非地址的形式传给子函数。&lt;/p&gt;
+&lt;p&gt;Mat 不但是一个很赞的图像容器类，它同时也是一个通用的矩阵类，所以可以用来创建和操作多维矩阵。
+需要指定存储元素的数据类型以及每个矩阵点的通道数。为此，依据下面的规则有多种定义:&lt;/p&gt;
+&lt;p&gt;CV_[The number of bits per item][Signed or Unsigned][Type Prefix]C[The channel number]&lt;/p&gt;
+&lt;p&gt;OpenCV (C++) 创建一个Mat对象有多种方法：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;  Mat M(2,2, CV_8UC3, Scalar(0,0,255));
+  cout &amp;lt;&amp;lt; &quot;M = &quot; &amp;lt;&amp;lt; endl &amp;lt;&amp;lt; &quot; &quot; &amp;lt;&amp;lt; M &amp;lt;&amp;lt; endl &amp;lt;&amp;lt; endl;  &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;输出：
+M=[0,0,255,0,0,255;
+0,0,255,0,0,255]&lt;/p&gt;
+&lt;h2&gt;二、  Emgu Mat类&lt;/h2&gt;
+&lt;p&gt;Emgu是C#封装的OpenCV库，基本的使用方法和OpenCV一样，但是在具体使用中还是有一些不太一样的地方。例如对矩阵元素的访问方法上，Emgu因为C#封装的关系，而不推荐使用指针直接访问元素，因此对元素的操作和处理就变得比较费力。OpenCV当中有img.at方法或者Mat::data方式访问。这些在emgucv当中都无法使用。 网上介绍的常见访问方式是采用Marshal的Copy方法，见：&lt;a href=&quot;https://blog.csdn.net/poisonchry/article/details/77620700&quot;&gt;https://blog.csdn.net/poisonchry/article/details/77620700&lt;/a&gt;
+也不失为一种可行的方法。 通过实验，以下代码可在emgucv3.4版本上运行。
+其中lblinfo是 label控件，作为输出载体。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;      int chn = 3;
+      Mat  testMat = new Mat(new System.Drawing.Size(2,2),Emgu.CV.CvEnum.DepthType.Cv8S,3 );
+      testMat.SetTo(new MCvScalar(0,0,255));
+
+      byte[] data = testMat.GetData();
+      lblInfo.Text = &quot;&quot;;
+      for (int i = 0; i &amp;lt; testMat.Rows; i++)
+      {
+          for (int j = 0; j &amp;lt; testMat.Cols * chn; j++)
+              lblInfo.Text = lblInfo.Text + String.Format(&quot;{0,4}&quot;, data[i * j].ToString()) + &quot; &quot;;
+          lblInfo.Text = lblInfo.Text + &quot;\r\n&quot;;
+      }&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;以上代码核心点在： testMat.GetData()方法。 通过Mat类返回 byte数组。&lt;/p&gt;            </description>
+            <pubDate>2018-05-06 09:11:17</pubDate>
+            <link>http://www.sagaii.cn/blog/20180506MatObject.html</link>
+            <guid isPermaLink="true">http://www.sagaii.cn/blog/20180506MatObject.html</guid>
+                                               <category>technology</category>
+                                    </item>
                 <item>
             <title>String.Format对C#字符串格式化</title>
             <description>
@@ -355,7 +402,7 @@ G 或 g
 以尽可能短的表示形式将枚举项显示为整数值。&lt;/p&gt;
 &lt;p&gt;X 或 x
 将枚举项显示为十六进制值。按需要将值表示为带有前导零，以确保值的长度最少有八位&lt;/p&gt;            </description>
-            <pubDate>2018-05-06 08:49:46</pubDate>
+            <pubDate>2018-05-06 09:11:17</pubDate>
             <link>http://www.sagaii.cn/blog/Knowledge/stringformat.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/Knowledge/stringformat.html</guid>
                                                <category>Knowledge</category>
@@ -389,7 +436,7 @@ summary: cut image
               }
           }
       }&lt;/code&gt;&lt;/pre&gt;            </description>
-            <pubDate>2018-05-06 08:49:46</pubDate>
+            <pubDate>2018-05-06 09:11:17</pubDate>
             <link>http://www.sagaii.cn/blog/20180428cutimage.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/20180428cutimage.html</guid>
                                                <category>technology</category>
@@ -419,7 +466,7 @@ summary: ctor &amp; dtor
 &lt;p&gt;dtor 是单词destructor的缩写。&lt;/p&gt;
 &lt;p&gt;在C#当中析构函数与C++一样，采用~符号开头加上类名来定义。&lt;/p&gt;
 &lt;p&gt;在C#和Java当中由于有垃圾回收机制，因此在对象生命周期结束后，系统会自动销毁对象。&lt;/p&gt;            </description>
-            <pubDate>2018-05-06 08:49:46</pubDate>
+            <pubDate>2018-05-06 09:11:17</pubDate>
             <link>http://www.sagaii.cn/blog/20180421ctor.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/20180421ctor.html</guid>
                                                <category>technology</category>
@@ -464,7 +511,7 @@ summary: architecture
                    V              V    V
                   NTierApplication.Entity&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;源代码下载地址： &lt;a href=&quot;https://github.com/SagaSrc/NTierApplication&quot;&gt;https://github.com/SagaSrc/NTierApplication&lt;/a&gt;&lt;/p&gt;            </description>
-            <pubDate>2018-05-06 08:49:46</pubDate>
+            <pubDate>2018-05-06 09:11:17</pubDate>
             <link>http://www.sagaii.cn/blog/20180408architecture.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/20180408architecture.html</guid>
                                                <category>technology</category>
@@ -499,7 +546,7 @@ summary: gogs winsw
        &amp;lt;logmode&amp;gt;reset&amp;lt;/logmode&amp;gt;
     &amp;lt;/service&amp;gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;把配置文件和可执行文件放在一起，打开一个管理员权限的命令提示符或Powershell窗口，然后输入winsw install 命令，如果返回值为0，说明已将程序注册为服务。 如果不再需要这个服务，使用winsw uninstall即可卸载服务。&lt;/p&gt;            </description>
-            <pubDate>2018-05-06 08:49:46</pubDate>
+            <pubDate>2018-05-06 09:11:17</pubDate>
             <link>http://www.sagaii.cn/blog/20180327WinSW.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/20180327WinSW.html</guid>
                                                <category>technology</category>
@@ -540,7 +587,7 @@ iis反向代理配置当中最难写的就是出站规则。 入站规则和出�
 &lt;p&gt;不管是iis和nginx的反向代理，都需要用到正则表达式。 验证正则表达式最好的平台应该就是：
 &lt;a href=&quot;https://regex101.com/&quot;&gt;https://regex101.com/&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;事实上，这个网站也是开源的，托管在github上。&lt;/p&gt;            </description>
-            <pubDate>2018-05-06 08:49:46</pubDate>
+            <pubDate>2018-05-06 09:11:17</pubDate>
             <link>http://www.sagaii.cn/blog/20180305AboutReverseProxy.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/20180305AboutReverseProxy.html</guid>
                                                <category>technology</category>
@@ -574,7 +621,7 @@ summary: 记录一些非常实用的网站.
 &lt;p&gt;&lt;a href=&quot;https://github.com/jockchou/gitblog&quot;&gt;1.使用Gitblog和Markdown搭建自己的博客网站 &lt;/a&gt;  &lt;/p&gt;
 &lt;p&gt;&lt;a href=&quot;https://github.com/jockchou/gitblog&quot;&gt;2.整合Wikitten和MDwiki搭建个人知识库 &lt;/a&gt;  &lt;/p&gt;
 &lt;p&gt;[3.战斗民族语言研究所-克林贡语]&lt;/p&gt;            </description>
-            <pubDate>2018-05-06 08:49:46</pubDate>
+            <pubDate>2018-05-06 09:11:17</pubDate>
             <link>http://www.sagaii.cn/blog/Knowledge/BestSite/bestsiteidx.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/Knowledge/BestSite/bestsiteidx.html</guid>
                                                <category>SiteLink</category>
@@ -617,7 +664,7 @@ summary: 2018乱弹Blog.
 &lt;/ol&gt;
 &lt;h2&gt;四、联系交流&lt;/h2&gt;
 &lt;pre&gt;&lt;code&gt;  Email to me , sagaii :  cube_npc@foxmail.com            &lt;/code&gt;&lt;/pre&gt;            </description>
-            <pubDate>2018-05-06 08:49:46</pubDate>
+            <pubDate>2018-05-06 09:11:17</pubDate>
             <link>http://www.sagaii.cn/blog/firstBlog.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/firstBlog.html</guid>
                                                <category>Others</category>
@@ -697,7 +744,7 @@ summary: GitBlog。
 &lt;p&gt;GitBlog的成长需要喜欢Markdown，喜欢写博客的各位亲们支持！感谢你们使用GitBlog，感激你们对Gitblog的良好建议与Bug反馈。&lt;/p&gt;
 &lt;p&gt;QQ群：&lt;code&gt;84692078&lt;/code&gt;&lt;br /&gt;
 作者邮箱：&lt;code&gt;164068300[AT]qq.com&lt;/code&gt;    &lt;/p&gt;            </description>
-            <pubDate>2018-05-06 08:49:46</pubDate>
+            <pubDate>2018-05-06 09:11:17</pubDate>
             <link>http://www.sagaii.cn/blog/welcome.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/welcome.html</guid>
                                                <category>Others</category>

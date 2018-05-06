@@ -3,9 +3,9 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>赫拉迪克NPC</title>
-	<meta name="keywords" content="GitBlog,blog,赫拉迪克NPC">
-	<meta name="description" content="technical skills  blog">
+	<title>EmguCV Mat元素访问的方法 (emgucv3.4)|赫拉迪克NPC</title>
+	<meta name="keywords" content="technology,赫拉迪克NPC">
+	<meta name="description" content="RT.">
 	
 	<link rel="stylesheet" href="../theme/sagaquest/assets/plugins/bootstrap/css/bootstrap.min.css?ver=2.3" type="text/css" media="all" />
 	<link rel="stylesheet" href="../theme/sagaquest/assets/plugins/font-awesome/css/font-awesome.min.css?ver=2.3" type="text/css" media="all" />
@@ -31,78 +31,92 @@
 	</div>
 </div>
 </header>		    <div id="content">
-		    		    	    	
-    	    		<div class="quest-row" id="title-container">
-	<div class="container title-container">
-		<div class="row">
-			<div class="col-md-6">
-								<h3>GitBlog</h3>
-							</div>
-			<div class="col-md-6">
-				<ul class="breadcrumbs">
-					<li><a href="../">Home</a></li>
-										<li>GitBlog</li>
-									</ul>
-				</div>
-		</div>
-	</div>
-</div>
-    		<div class="quest-row site-content">
+	<div class="quest-row site-content">
 		<div class="container">
 			<div class="row">
-				<div id="primary" class="content-area col-md-9">
+				<div id="primary" class="content-area single col-md-9">
 					<div id="main" class="site-main" role="main">
-																										        	<article class="post hentry">
+						<article class="post hentry">
 	<header class="entry-header">
-	<h1 class="post-title"><a href="../blog/20180327WinSW.html" rel="bookmark">注册Windows服务工具(WinSW) for gogs </a></h1>
+	<h1 class="post-title"><a href="../blog/20180506MatObject.html" rel="bookmark">EmguCV Mat元素访问的方法 (emgucv3.4) </a></h1>
 	<div class="entry-meta">
-		<time class="post-date"><i class="fa fa-clock-o"></i>2018-03-05</time>
+		<time class="post-date"><i class="fa fa-clock-o"></i>2018-05-06</time>
 				<span class="seperator">/</span>
 	    <span><i class="fa fa-user"></i> sagaii</span>
 	    	</div><!-- .entry-meta -->
 </header><!-- .entry-header -->
 	<div class="entry-content">
-		<p>gogs winsw</p>
+		<p>﻿<!--
+author: sagaii
+head: http://www.sagaii.cn/blog/img/zoltunsmall.png
+date: 2018-05-06
+title: EmguCV Mat元素访问的方法 (emgucv3.4)
+tags:  
+images: http://www.sagaii.cn/blog/img/zoltun.png
+category: technology
+status: publish
+summary: RT.
+--></p>
+<h2>一、  OpenCV Mat类</h2>
+<p>Mat是一个类，由两个数据部分组成：矩阵头（包含矩阵尺寸、存储方法、存储地址等信息）和一个指向存储所有像素值矩阵的指针。每个Mat对象有自己的信息头，但共享同一个矩阵。这通过让矩阵指向同一地址而实现。而拷贝构造函数则只是复制信息头和矩阵指针，而不是复制矩阵。因此Mat类的对象作为参数传给子函数时，既可以以地址的形式传给子函数，也可以以非地址的形式传给子函数。</p>
+<p>Mat 不但是一个很赞的图像容器类，它同时也是一个通用的矩阵类，所以可以用来创建和操作多维矩阵。
+需要指定存储元素的数据类型以及每个矩阵点的通道数。为此，依据下面的规则有多种定义:</p>
+<p>CV_[The number of bits per item][Signed or Unsigned][Type Prefix]C[The channel number]</p>
+<p>OpenCV (C++) 创建一个Mat对象有多种方法：</p>
+<pre><code>  Mat M(2,2, CV_8UC3, Scalar(0,0,255));
+  cout &lt;&lt; "M = " &lt;&lt; endl &lt;&lt; " " &lt;&lt; M &lt;&lt; endl &lt;&lt; endl;  </code></pre>
+<p>输出：
+M=[0,0,255,0,0,255;
+0,0,255,0,0,255]</p>
+<h2>二、  Emgu Mat类</h2>
+<p>Emgu是C#封装的OpenCV库，基本的使用方法和OpenCV一样，但是在具体使用中还是有一些不太一样的地方。例如对矩阵元素的访问方法上，Emgu因为C#封装的关系，而不推荐使用指针直接访问元素，因此对元素的操作和处理就变得比较费力。OpenCV当中有img.at方法或者Mat::data方式访问。这些在emgucv当中都无法使用。 网上介绍的常见访问方式是采用Marshal的Copy方法，见：<a href="https://blog.csdn.net/poisonchry/article/details/77620700">https://blog.csdn.net/poisonchry/article/details/77620700</a>
+也不失为一种可行的方法。 通过实验，以下代码可在emgucv3.4版本上运行。
+其中lblinfo是 label控件，作为输出载体。</p>
+<pre><code>      int chn = 3;
+      Mat  testMat = new Mat(new System.Drawing.Size(2,2),Emgu.CV.CvEnum.DepthType.Cv8S,3 );
+      testMat.SetTo(new MCvScalar(0,0,255));
+
+      byte[] data = testMat.GetData();
+      lblInfo.Text = "";
+      for (int i = 0; i &lt; testMat.Rows; i++)
+      {
+          for (int j = 0; j &lt; testMat.Cols * chn; j++)
+              lblInfo.Text = lblInfo.Text + String.Format("{0,4}", data[i * j].ToString()) + " ";
+          lblInfo.Text = lblInfo.Text + "\r\n";
+      }</code></pre>
+<p>以上代码核心点在： testMat.GetData()方法。 通过Mat类返回 byte数组。</p>
 	</div><!-- .entry-content -->	<footer class="entry-footer">
 		<ul class="post-categories">
           
           <li><a href="../category/technology.html" rel="category">technology</a></li>
         	</ul>
 		
-		<ul class="post-tags">
-                   <li><a href="../tags/WinSW.html" rel="tag">WinSW</a></li>
-        	</ul>
 		
-		<div class="read-more">
-		<a href="../blog/20180327WinSW.html">阅读全文<i class="fa fa-angle-double-right "></i></a>
-	</div>
-	</footer><!-- .entry-footer --></article><!-- #post-## -->					        						        													        	<article class="post hentry">
-	<header class="entry-header">
-	<h1 class="post-title"><a href="../blog/20180305AboutReverseProxy.html" rel="bookmark">关于反向代理的总结 </a></h1>
-	<div class="entry-meta">
-		<time class="post-date"><i class="fa fa-clock-o"></i>2018-03-05</time>
-				<span class="seperator">/</span>
-	    <span><i class="fa fa-user"></i> sagaii</span>
-	    	</div><!-- .entry-meta -->
-</header><!-- .entry-header -->
-	<div class="entry-content">
-		<p>.</p>
-	</div><!-- .entry-content -->	<footer class="entry-footer">
-		<ul class="post-categories">
-          
-          <li><a href="../category/technology.html" rel="category">technology</a></li>
-        	</ul>
-		
-		<ul class="post-tags">
-                   <li><a href="../tags/ReverseProxy.html" rel="tag">ReverseProxy</a></li>
-        	</ul>
-		
-		<div class="read-more">
-		<a href="../blog/20180305AboutReverseProxy.html">阅读全文<i class="fa fa-angle-double-right "></i></a>
-	</div>
-	</footer><!-- .entry-footer --></article><!-- #post-## -->					        						        																		</div>
+	</footer><!-- .entry-footer --></article><!-- #post-## -->            			<div id="comments" class="clearfix">
+	<div id="container"></div>
+	    
+	    <!--gitment评论-->
+		<link rel="stylesheet" href="../theme/sagaquest/gitment/gitmentdefault.css" type="text/css" media="all" /> 
+		<script src="../theme/sagaquest/gitment/gitment.browser.js"></script> 
+
+	    <script>
+			var gitment = new Gitment({
+			  id: '', // 可选。默认为 location.href
+			  owner: 'sagaii',
+			  repo: 'sagaii.github.ioment',
+			  oauth: {
+			    client_id: '868aaedcfa2c103fbc49',
+			    client_secret: 'e2f87a817ca41a244e730148e111e2795df06d34',
+			  },
+			})
+			gitment.render('container')
+		</script> 
+</div>
+  
+ 					</div>
 					<!-- #main -->
 				</div>
+				<!-- #primary -->
 				<div id="secondary" class="widget-area main-sidebar col-md-3" role="complementary">
 	<aside class="widget widget_search sidebar-widget clearfix">
 	<h3 class="widget-title">搜索</h3>
@@ -168,7 +182,7 @@
 		<!-- .container -->
 	</div>
 	<!-- .quest-row -->
-</div><!-- #content -->		    <footer id="colophon" class="copyright quest-row" role="contentinfo">
+</div>		    <footer id="colophon" class="copyright quest-row" role="contentinfo">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-6 copyright-text">

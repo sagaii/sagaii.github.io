@@ -4,8 +4,8 @@
         <description>technical skills  blog</description>
         <link>http://www.sagaii.cn</link>
         <atom:link href="http://www.sagaii.cn/feed.xml" rel="self" type="application/rss+xml" />
-        <pubDate>2018-05-06 09:05:19</pubDate>
-        <lastBuildDate>2018-05-06 09:05:19</lastBuildDate>
+        <pubDate>2018-05-19 19:05:54</pubDate>
+        <lastBuildDate>2018-05-19 19:05:54</lastBuildDate>
         <generator>Gitblog v1.0</generator>
                 <item>
             <title>EmguCV Mat元素访问的方法 (emgucv3.4)</title>
@@ -49,7 +49,7 @@ M=[0,0,255,0,0,255;
           lblInfo.Text = lblInfo.Text + &quot;\r\n&quot;;
       }&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;以上代码核心点在： testMat.GetData()方法。 通过Mat类返回 byte数组。&lt;/p&gt;            </description>
-            <pubDate>2018-05-06 09:11:17</pubDate>
+            <pubDate>2018-05-19 19:54:49</pubDate>
             <link>http://www.sagaii.cn/blog/20180506MatObject.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/20180506MatObject.html</guid>
                                                <category>technology</category>
@@ -402,7 +402,7 @@ G 或 g
 以尽可能短的表示形式将枚举项显示为整数值。&lt;/p&gt;
 &lt;p&gt;X 或 x
 将枚举项显示为十六进制值。按需要将值表示为带有前导零，以确保值的长度最少有八位&lt;/p&gt;            </description>
-            <pubDate>2018-05-06 09:11:17</pubDate>
+            <pubDate>2018-05-19 19:54:49</pubDate>
             <link>http://www.sagaii.cn/blog/Knowledge/stringformat.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/Knowledge/stringformat.html</guid>
                                                <category>Knowledge</category>
@@ -436,7 +436,7 @@ summary: cut image
               }
           }
       }&lt;/code&gt;&lt;/pre&gt;            </description>
-            <pubDate>2018-05-06 09:11:17</pubDate>
+            <pubDate>2018-05-19 19:54:49</pubDate>
             <link>http://www.sagaii.cn/blog/20180428cutimage.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/20180428cutimage.html</guid>
                                                <category>technology</category>
@@ -466,7 +466,7 @@ summary: ctor &amp; dtor
 &lt;p&gt;dtor 是单词destructor的缩写。&lt;/p&gt;
 &lt;p&gt;在C#当中析构函数与C++一样，采用~符号开头加上类名来定义。&lt;/p&gt;
 &lt;p&gt;在C#和Java当中由于有垃圾回收机制，因此在对象生命周期结束后，系统会自动销毁对象。&lt;/p&gt;            </description>
-            <pubDate>2018-05-06 09:11:17</pubDate>
+            <pubDate>2018-05-19 19:54:49</pubDate>
             <link>http://www.sagaii.cn/blog/20180421ctor.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/20180421ctor.html</guid>
                                                <category>technology</category>
@@ -511,7 +511,7 @@ summary: architecture
                    V              V    V
                   NTierApplication.Entity&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;源代码下载地址： &lt;a href=&quot;https://github.com/SagaSrc/NTierApplication&quot;&gt;https://github.com/SagaSrc/NTierApplication&lt;/a&gt;&lt;/p&gt;            </description>
-            <pubDate>2018-05-06 09:11:17</pubDate>
+            <pubDate>2018-05-19 19:54:49</pubDate>
             <link>http://www.sagaii.cn/blog/20180408architecture.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/20180408architecture.html</guid>
                                                <category>technology</category>
@@ -546,7 +546,7 @@ summary: gogs winsw
        &amp;lt;logmode&amp;gt;reset&amp;lt;/logmode&amp;gt;
     &amp;lt;/service&amp;gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;把配置文件和可执行文件放在一起，打开一个管理员权限的命令提示符或Powershell窗口，然后输入winsw install 命令，如果返回值为0，说明已将程序注册为服务。 如果不再需要这个服务，使用winsw uninstall即可卸载服务。&lt;/p&gt;            </description>
-            <pubDate>2018-05-06 09:11:17</pubDate>
+            <pubDate>2018-05-19 19:54:49</pubDate>
             <link>http://www.sagaii.cn/blog/20180327WinSW.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/20180327WinSW.html</guid>
                                                <category>technology</category>
@@ -587,7 +587,7 @@ iis反向代理配置当中最难写的就是出站规则。 入站规则和出�
 &lt;p&gt;不管是iis和nginx的反向代理，都需要用到正则表达式。 验证正则表达式最好的平台应该就是：
 &lt;a href=&quot;https://regex101.com/&quot;&gt;https://regex101.com/&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;事实上，这个网站也是开源的，托管在github上。&lt;/p&gt;            </description>
-            <pubDate>2018-05-06 09:11:17</pubDate>
+            <pubDate>2018-05-19 19:54:49</pubDate>
             <link>http://www.sagaii.cn/blog/20180305AboutReverseProxy.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/20180305AboutReverseProxy.html</guid>
                                                <category>technology</category>
@@ -621,7 +621,7 @@ summary: 记录一些非常实用的网站.
 &lt;p&gt;&lt;a href=&quot;https://github.com/jockchou/gitblog&quot;&gt;1.使用Gitblog和Markdown搭建自己的博客网站 &lt;/a&gt;  &lt;/p&gt;
 &lt;p&gt;&lt;a href=&quot;https://github.com/jockchou/gitblog&quot;&gt;2.整合Wikitten和MDwiki搭建个人知识库 &lt;/a&gt;  &lt;/p&gt;
 &lt;p&gt;[3.战斗民族语言研究所-克林贡语]&lt;/p&gt;            </description>
-            <pubDate>2018-05-06 09:11:17</pubDate>
+            <pubDate>2018-05-19 19:54:49</pubDate>
             <link>http://www.sagaii.cn/blog/Knowledge/BestSite/bestsiteidx.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/Knowledge/BestSite/bestsiteidx.html</guid>
                                                <category>SiteLink</category>
@@ -664,7 +664,7 @@ summary: 2018乱弹Blog.
 &lt;/ol&gt;
 &lt;h2&gt;四、联系交流&lt;/h2&gt;
 &lt;pre&gt;&lt;code&gt;  Email to me , sagaii :  cube_npc@foxmail.com            &lt;/code&gt;&lt;/pre&gt;            </description>
-            <pubDate>2018-05-06 09:11:17</pubDate>
+            <pubDate>2018-05-19 19:54:49</pubDate>
             <link>http://www.sagaii.cn/blog/firstBlog.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/firstBlog.html</guid>
                                                <category>Others</category>
@@ -744,7 +744,7 @@ summary: GitBlog。
 &lt;p&gt;GitBlog的成长需要喜欢Markdown，喜欢写博客的各位亲们支持！感谢你们使用GitBlog，感激你们对Gitblog的良好建议与Bug反馈。&lt;/p&gt;
 &lt;p&gt;QQ群：&lt;code&gt;84692078&lt;/code&gt;&lt;br /&gt;
 作者邮箱：&lt;code&gt;164068300[AT]qq.com&lt;/code&gt;    &lt;/p&gt;            </description>
-            <pubDate>2018-05-06 09:11:17</pubDate>
+            <pubDate>2018-05-19 19:54:49</pubDate>
             <link>http://www.sagaii.cn/blog/welcome.html</link>
             <guid isPermaLink="true">http://www.sagaii.cn/blog/welcome.html</guid>
                                                <category>Others</category>

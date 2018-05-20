@@ -3,9 +3,9 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>赫拉迪克NPC</title>
-	<meta name="keywords" content="SitesLink,blog,赫拉迪克NPC">
-	<meta name="description" content="technical skills  blog">
+	<title>Jenkins Jobs Setting with Gogs|赫拉迪克NPC</title>
+	<meta name="keywords" content="technology,赫拉迪克NPC">
+	<meta name="description" content="一个简单的持续部署配置案例.">
 	
 	<link rel="stylesheet" href="../theme/sagaquest/assets/plugins/bootstrap/css/bootstrap.min.css?ver=2.3" type="text/css" media="all" />
 	<link rel="stylesheet" href="../theme/sagaquest/assets/plugins/font-awesome/css/font-awesome.min.css?ver=2.3" type="text/css" media="all" />
@@ -31,54 +31,106 @@
 	</div>
 </div>
 </header>		    <div id="content">
-		    		    	    	
-    	    		<div class="quest-row" id="title-container">
-	<div class="container title-container">
-		<div class="row">
-			<div class="col-md-6">
-								<h3>SitesLink</h3>
-							</div>
-			<div class="col-md-6">
-				<ul class="breadcrumbs">
-					<li><a href="../">Home</a></li>
-										<li>SitesLink</li>
-									</ul>
-				</div>
-		</div>
-	</div>
-</div>
-    		<div class="quest-row site-content">
+	<div class="quest-row site-content">
 		<div class="container">
 			<div class="row">
-				<div id="primary" class="content-area col-md-9">
+				<div id="primary" class="content-area single col-md-9">
 					<div id="main" class="site-main" role="main">
-																										        	<article class="post hentry">
+						<article class="post hentry">
 	<header class="entry-header">
-	<h1 class="post-title"><a href="../blog/Knowledge/BestSite/bestsiteidx.html" rel="bookmark">实用网站集 </a></h1>
+	<h1 class="post-title"><a href="../blog/20180520JenkinsJobSetting.html" rel="bookmark">Jenkins Jobs Setting with Gogs </a></h1>
 	<div class="entry-meta">
-		<time class="post-date"><i class="fa fa-clock-o"></i>2018-01-14</time>
+		<time class="post-date"><i class="fa fa-clock-o"></i>2018-05-20</time>
 				<span class="seperator">/</span>
 	    <span><i class="fa fa-user"></i> sagaii</span>
 	    	</div><!-- .entry-meta -->
 </header><!-- .entry-header -->
 	<div class="entry-content">
-		<p>记录一些非常实用的网站.</p>
+		<p>﻿<!--
+author: sagaii
+head: http://www.sagaii.cn/blog/img/zoltunsmall.png
+date: 2018-05-20
+title: Jenkins Jobs Setting with Gogs
+tags:  
+images: http://www.sagaii.cn/blog/img/zoltun.png
+category: technology
+status: publish
+summary: 一个简单的持续部署配置案例.
+--></p>
+<h2>一、  配置目标</h2>
+<p>实现Git Repo库发生变更后，触发jenkins自动构建。具体来说，我们通过Gogs来维护试题库。
+试题库在题库制作者修改，编辑，提交Git Repo后，能够通过web hook 自动触发jenkins启动构建任务
+执行从Git Repo获取最新题库内容，并复制到测评系统。</p>
+<h2>二、  配置说明</h2>
+<h3>jenkins端：</h3>
+<pre><code>1. 创建一个自由风格的软件项目（名称如：webtest1_dx_dwydb），这个名称就是jenkins里面的job名称，需要注意的是
+如果在jenkins里面创建了任务文件夹，那么需要注意job的全称（如： Full project name: ggjxb_testdb/webtest1_dx_dwydb）
+
+2. 在webtest1_dx_dwydb任务的配置当中
+   （1）Gogs Webhook 节， 勾选“Use Gogs secret”，填写内容，如：“mysecretkey” 。，这个内容后续在gogs当中需要配置用。
+     “丢弃旧的构建”，根据需要配置。
+   （2）源码管理 节： 选择“git”,配置Repositories信息，Repository URL 有Http和SSH两种方式。这个配置其实是有点陷阱的，经过试验
+   建议如下配置方法最简单：
+       注意： 首先确认，在jenkins当中系统配置 当中“Git plugin”节，设置   Global Config user.name Value和Global Config user.email Value的内容，这一内容最好是与jenkins系统所安装环境当中git.exe 所对应的    Global Config user.name 和Global Config user.email一致。
+      1）输入http方式的git repo库地址，如： http://git.XXXXXX.ABC/ggjxb/DKJDB.git
+      2) 选择 Credentials 身份验证内容，没有就 Add (添加身份验证)，这里建议，jenkins系统后台自动执行的用户与jenkins系统安装执行jenkins服务的用户和需要访问的git系统当中的用户，三方用户一致。这样后续配置过程当中不容易出现访问git库没有权限的错误。
+  （3）构建触发器 节： 选择“Build when a change is pushed to Gogs”。
+  （4）构建环境 节： 个人喜欢选择“Delete workspace before build starts”，理论上环境比较干净，不容易出错。
+  （5）构建 节： 选择 “Execute windows batch command”,当然也可以选择其他内容。
+       这里需要注意的是，前面配置了git库后，jenkins系统会在执行任务前，自动访问git库，提取git库当中的所有内容到%WORKSPACE%目录当中。
+       因此，构建 节只要认为是你本地已经有了git库当中的所有内容，然后再考虑后续工作。 以下是我用的bat代码
+
+          echo %WORKSPACE%
+          cd %WORKSPACE%
+          Set TestDBPath=\\WIN-XX197\wt1\dx\db\dxtk\DKJDB\
+          rem 复制最新的内容
+          xcopy    %WORKSPACE%   %TestDBPath%  /e /y
+          rem 复制完成</code></pre>
+<h3>gogs端：</h3>
+<pre><code>  1. gogs端首先是要创建一个DKJDB库。
+  2. 在DKJDB库中，选择仓库设置，在管理写作者，添加jenkins系统中访问git repo库的用户（如前所述，最好三方用户名一致）。用户权限设置根据需要设置，如果jenkins系统不允许更改git repo库当中的内容，设置为“只读权限”即可，否则设置为“可写权限”。
+  3. 选择“管理 web 钩子”，点击“添加web钩子”，这里的内容如下填写：
+     （1）推送地址：填写如下格式： http://jenkins系统访问地址/gogs-webhook/?job=jenkins任务名称
+              如：http://jenkins.XXXXX.ABC/gogs-webhook/?job=ggjxb_testdb/webtest1_dx_dkjdb
+       需要注意的是job后面的值需要与jenkins当中的一致，错一点都不行。
+     （2）数据格式默认，密钥文本，需要填写与jenkins系统中“Use Gogs secret”对应的内容，如：“mysecretkey” 。
+     （3）触发事件，根据需要选择。
+     （4）最近推送记录 ,这里有一个“测试推送”按钮，点击后，如果触发了jenkins任务，在记录内容的前面会有一个绿色的小勾，否则是警告。
+          因此，用这个功能可以很好的观察到gogs与jenkins的配合效果。
+
+以上配置完成后，只需要在gogs当中存入需要的数据，你所需要即可展示到前台。</code></pre>
 	</div><!-- .entry-content -->	<footer class="entry-footer">
 		<ul class="post-categories">
           
-          <li><a href="../category/SiteLink.html" rel="category">SiteLink</a></li>
+          <li><a href="../category/technology.html" rel="category">technology</a></li>
         	</ul>
 		
-		<ul class="post-tags">
-                   <li><a href="../tags/SitesLink.html" rel="tag">SitesLink</a></li>
-        	</ul>
 		
-		<div class="read-more">
-		<a href="../blog/Knowledge/BestSite/bestsiteidx.html">阅读全文<i class="fa fa-angle-double-right "></i></a>
-	</div>
-	</footer><!-- .entry-footer --></article><!-- #post-## -->					        						        																		</div>
+	</footer><!-- .entry-footer --></article><!-- #post-## -->            			<div id="comments" class="clearfix">
+	<div id="container"></div>
+	    
+	    <!--gitment评论-->
+		<link rel="stylesheet" href="../theme/sagaquest/gitment/gitmentdefault.css" type="text/css" media="all" /> 
+		<script src="../theme/sagaquest/gitment/gitment.browser.js"></script> 
+
+	    <script>
+			var gitment = new Gitment({
+			  id: '', // 可选。默认为 location.href
+			  owner: 'sagaii',
+			  repo: 'sagaii.github.ioment',
+			  oauth: {
+			    client_id: '868aaedcfa2c103fbc49',
+			    client_secret: 'e2f87a817ca41a244e730148e111e2795df06d34',
+			  },
+			})
+			gitment.render('container')
+		</script> 
+</div>
+  
+ 					</div>
 					<!-- #main -->
 				</div>
+				<!-- #primary -->
 				<div id="secondary" class="widget-area main-sidebar col-md-3" role="complementary">
 	<aside class="widget widget_search sidebar-widget clearfix">
 	<h3 class="widget-title">搜索</h3>
@@ -144,7 +196,7 @@
 		<!-- .container -->
 	</div>
 	<!-- .quest-row -->
-</div><!-- #content -->		    <footer id="colophon" class="copyright quest-row" role="contentinfo">
+</div>		    <footer id="colophon" class="copyright quest-row" role="contentinfo">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-6 copyright-text">

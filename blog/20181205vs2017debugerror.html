@@ -3,9 +3,9 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>赫拉迪克NPC</title>
-	<meta name="keywords" content="SitesLink,blog,赫拉迪克NPC">
-	<meta name="description" content="technical skills  blog">
+	<title>VS2017调试Web程序错误（无法生成调试程序包）|赫拉迪克NPC</title>
+	<meta name="keywords" content="iisexpress,technology,赫拉迪克NPC">
+	<meta name="description" content=".">
 	
 	<link rel="stylesheet" href="../theme/sagaquest/assets/plugins/bootstrap/css/bootstrap.min.css?ver=2.3" type="text/css" media="all" />
 	<link rel="stylesheet" href="../theme/sagaquest/assets/plugins/font-awesome/css/font-awesome.min.css?ver=2.3" type="text/css" media="all" />
@@ -31,78 +31,86 @@
 	</div>
 </div>
 </header>		    <div id="content">
-		    		    	    	
-    	    		<div class="quest-row" id="title-container">
-	<div class="container title-container">
-		<div class="row">
-			<div class="col-md-6">
-								<h3>SitesLink</h3>
-							</div>
-			<div class="col-md-6">
-				<ul class="breadcrumbs">
-					<li><a href="../">Home</a></li>
-										<li>SitesLink</li>
-									</ul>
-				</div>
-		</div>
-	</div>
-</div>
-    		<div class="quest-row site-content">
+	<div class="quest-row site-content">
 		<div class="container">
 			<div class="row">
-				<div id="primary" class="content-area col-md-9">
+				<div id="primary" class="content-area single col-md-9">
 					<div id="main" class="site-main" role="main">
-																										        	<article class="post hentry">
+						<article class="post hentry">
 	<header class="entry-header">
-	<h1 class="post-title"><a href="../blog/Knowledge/BestSite/bestsiteidx.html" rel="bookmark">实用网站集 </a></h1>
+	<h1 class="post-title"><a href="../blog/20181205vs2017debugerror.html" rel="bookmark">VS2017调试Web程序错误（无法生成调试程序包） </a></h1>
 	<div class="entry-meta">
-		<time class="post-date"><i class="fa fa-clock-o"></i>2018-01-14</time>
+		<time class="post-date"><i class="fa fa-clock-o"></i>2018-12-05</time>
 				<span class="seperator">/</span>
 	    <span><i class="fa fa-user"></i> sagaii</span>
 	    	</div><!-- .entry-meta -->
 </header><!-- .entry-header -->
 	<div class="entry-content">
-		<p>记录一些非常实用的网站.</p>
+		<p>﻿<!--
+author: sagaii
+head: http://www.sagaii.cn/blog/img/zoltunsmall.png
+date: 2018-12-05
+title: VS2017调试Web程序错误（无法生成调试程序包）
+tags:  iisexpress
+images: http://www.sagaii.cn/blog/img/zoltun.png
+category: technology
+status: publish
+summary: .
+--></p>
+<h2>一、 原由</h2>
+<p>最近修改一个小程序(Asp.net MVC架构)，在自带的iisexpress上调试。</p>
+<ol>
+<li>一直报错误： 无法访问请求的页面,因为该页的相关配置数据无效。</li>
+<li>查询 iisexpress配置文件夹 %userprofile%\documents\iisexpress 当中的配置文件，发现代码没有创建相应的站点配置。</li>
+<li>在%userprofile%\documents\my web sites\文件夹下站点也缺少相应站点网页（含程序）。</li>
+</ol>
+<h2>二、 分析</h2>
+<ol>
+<li>有可能是权限问题，导致iisexpress无法访问上述文件夹。 因此，配置了权限，结果失效。</li>
+<li>还有可能是因为我配置了文件夹的符号链接（mklink命令创建)，导致vs2017访问符号链接文件夹失败。</li>
+<li>清理了asp.net 项目工程，无法解决问题。</li>
+<li>考虑可能是vs2017没有正常发布调试程序。</li>
+</ol>
+<h2>三、 解决</h2>
+<p>根据以上判断，搜索后，确定方案，删除工程文件夹当中的.vs文件夹，重新生成文件即可。</p>
+<p>因为：
+.vs目录是用来存储当前用户在解决方案中的工作配置，具体包括VS关闭前最后的窗口布局、最后打开的选项卡/操作记录/文件文档、某些自定义配置/开发环境、调试断点等这类设置信息和状态。这样每当用户关闭解决方案后再重新打开，就能继续之前的工作状态。</p>
+<p>删除之后，vs会重新创建所有初始化配置参数，包括向iisexpress的配置文件添加项目配置信息和向my web sites文件夹创建初始程序文件。</p>
 	</div><!-- .entry-content -->	<footer class="entry-footer">
 		<ul class="post-categories">
           
-          <li><a href="../category/SiteLink.html" rel="category">SiteLink</a></li>
+          <li><a href="../category/technology.html" rel="category">technology</a></li>
         	</ul>
 		
 		<ul class="post-tags">
-                   <li><a href="../tags/SitesLink.html" rel="tag">SitesLink</a></li>
+                   <li><a href="../tags/iisexpress.html" rel="tag">iisexpress</a></li>
         	</ul>
 		
-		<div class="read-more">
-		<a href="../blog/Knowledge/BestSite/bestsiteidx.html">阅读全文<i class="fa fa-angle-double-right "></i></a>
-	</div>
-	</footer><!-- .entry-footer --></article><!-- #post-## -->					        						        													        	<article class="post hentry">
-	<header class="entry-header">
-	<h1 class="post-title"><a href="../blog/BestSite/bestsiteidx.html" rel="bookmark">实用网站集 </a></h1>
-	<div class="entry-meta">
-		<time class="post-date"><i class="fa fa-clock-o"></i>2018-01-14</time>
-				<span class="seperator">/</span>
-	    <span><i class="fa fa-user"></i> sagaii</span>
-	    	</div><!-- .entry-meta -->
-</header><!-- .entry-header -->
-	<div class="entry-content">
-		<p>记录一些非常实用的网站.</p>
-	</div><!-- .entry-content -->	<footer class="entry-footer">
-		<ul class="post-categories">
-          
-          <li><a href="../category/SiteLink.html" rel="category">SiteLink</a></li>
-        	</ul>
-		
-		<ul class="post-tags">
-                   <li><a href="../tags/SitesLink.html" rel="tag">SitesLink</a></li>
-        	</ul>
-		
-		<div class="read-more">
-		<a href="../blog/BestSite/bestsiteidx.html">阅读全文<i class="fa fa-angle-double-right "></i></a>
-	</div>
-	</footer><!-- .entry-footer --></article><!-- #post-## -->					        						        																		</div>
+	</footer><!-- .entry-footer --></article><!-- #post-## -->            			<div id="comments" class="clearfix">
+	<div id="container"></div>
+	    
+	    <!--gitment评论-->
+		<link rel="stylesheet" href="../theme/sagaquest/gitment/gitmentdefault.css" type="text/css" media="all" /> 
+		<script src="../theme/sagaquest/gitment/gitment.browser.js"></script> 
+
+	    <script>
+			var gitment = new Gitment({
+			  id: '', // 可选。默认为 location.href
+			  owner: 'sagaii',
+			  repo: 'sagaii.github.ioment',
+			  oauth: {
+			    client_id: '868aaedcfa2c103fbc49',
+			    client_secret: 'e2f87a817ca41a244e730148e111e2795df06d34',
+			  },
+			})
+			gitment.render('container')
+		</script> 
+</div>
+  
+ 					</div>
 					<!-- #main -->
 				</div>
+				<!-- #primary -->
 				<div id="secondary" class="widget-area main-sidebar col-md-3" role="complementary">
 	<aside class="widget widget_search sidebar-widget clearfix">
 	<h3 class="widget-title">搜索</h3>
@@ -170,7 +178,7 @@
 		<!-- .container -->
 	</div>
 	<!-- .quest-row -->
-</div><!-- #content -->		    <footer id="colophon" class="copyright quest-row" role="contentinfo">
+</div>		    <footer id="colophon" class="copyright quest-row" role="contentinfo">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-6 copyright-text">

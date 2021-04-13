@@ -1,814 +1,141 @@
 <?xml version="1.0" encoding="UTF-8"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>赫拉迪克NPC</title>
-        <description>technical skills  blog</description>
-        <link>http://www.sagaii.cn</link>
-        <atom:link href="http://www.sagaii.cn/feed.xml" rel="self" type="application/rss+xml" />
-        <pubDate>2018-05-20 10:05:14</pubDate>
-        <lastBuildDate>2018-05-20 10:05:14</lastBuildDate>
+        <title><?=$site['title']?></title>
+        <description><?=$site['description']?></description>
+        <link><?=$site['url']?></link>
+        <atom:link href="<?=$site['url']?>/feed.xml" rel="self" type="application/rss+xml" />
+        <pubDate><?=date('Y-m-d H:m:s')?></pubDate>
+        <lastBuildDate><?=date('Y-m-d H:m:s')?></lastBuildDate>
         <generator>Gitblog v1.0</generator>
                 <item>
-            <title>Jenkins Jobs Setting with Gogs</title>
+            <title><?=$blog['title']?></title>
             <description>
-            &lt;p&gt;﻿&lt;!--
-author: sagaii
-head: http://www.sagaii.cn/blog/img/zoltunsmall.png
-date: 2018-05-20
-title: Jenkins Jobs Setting with Gogs
-tags:  
-images: http://www.sagaii.cn/blog/img/zoltun.png
-category: technology
-status: publish
-summary: 一个简单的持续部署配置案例.
---&gt;&lt;/p&gt;
-&lt;h2&gt;一、  配置目标&lt;/h2&gt;
-&lt;p&gt;实现Git Repo库发生变更后，触发jenkins自动构建。具体来说，我们通过Gogs来维护试题库。
-试题库在题库制作者修改，编辑，提交Git Repo后，能够通过web hook 自动触发jenkins启动构建任务
-执行从Git Repo获取最新题库内容，并复制到测评系统。&lt;/p&gt;
-&lt;h2&gt;二、  配置说明&lt;/h2&gt;
-&lt;h3&gt;jenkins端：&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;1. 创建一个自由风格的软件项目（名称如：webtest1_dx_dwydb），这个名称就是jenkins里面的job名称，需要注意的是
-如果在jenkins里面创建了任务文件夹，那么需要注意job的全称（如： Full project name: ggjxb_testdb/webtest1_dx_dwydb）
-
-2. 在webtest1_dx_dwydb任务的配置当中
-   （1）Gogs Webhook 节， 勾选“Use Gogs secret”，填写内容，如：“mysecretkey” 。，这个内容后续在gogs当中需要配置用。
-     “丢弃旧的构建”，根据需要配置。
-   （2）源码管理 节： 选择“git”,配置Repositories信息，Repository URL 有Http和SSH两种方式。这个配置其实是有点陷阱的，经过试验
-   建议如下配置方法最简单：
-       注意： 首先确认，在jenkins当中系统配置 当中“Git plugin”节，设置   Global Config user.name Value和Global Config user.email Value的内容，这一内容最好是与jenkins系统所安装环境当中git.exe 所对应的    Global Config user.name 和Global Config user.email一致。
-      1）输入http方式的git repo库地址，如： http://git.XXXXXX.ABC/ggjxb/DKJDB.git
-      2) 选择 Credentials 身份验证内容，没有就 Add (添加身份验证)，这里建议，jenkins系统后台自动执行的用户与jenkins系统安装执行jenkins服务的用户和需要访问的git系统当中的用户，三方用户一致。这样后续配置过程当中不容易出现访问git库没有权限的错误。
-  （3）构建触发器 节： 选择“Build when a change is pushed to Gogs”。
-  （4）构建环境 节： 个人喜欢选择“Delete workspace before build starts”，理论上环境比较干净，不容易出错。
-  （5）构建 节： 选择 “Execute windows batch command”,当然也可以选择其他内容。
-       这里需要注意的是，前面配置了git库后，jenkins系统会在执行任务前，自动访问git库，提取git库当中的所有内容到%WORKSPACE%目录当中。
-       因此，构建 节只要认为是你本地已经有了git库当中的所有内容，然后再考虑后续工作。 以下是我用的bat代码
-
-          echo %WORKSPACE%
-          cd %WORKSPACE%
-          Set TestDBPath=\\WIN-XX197\wt1\dx\db\dxtk\DKJDB\
-          rem 复制最新的内容
-          xcopy    %WORKSPACE%   %TestDBPath%  /e /y
-          rem 复制完成&lt;/code&gt;&lt;/pre&gt;
-&lt;h3&gt;gogs端：&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;  1. gogs端首先是要创建一个DKJDB库。
-  2. 在DKJDB库中，选择仓库设置，在管理写作者，添加jenkins系统中访问git repo库的用户（如前所述，最好三方用户名一致）。用户权限设置根据需要设置，如果jenkins系统不允许更改git repo库当中的内容，设置为“只读权限”即可，否则设置为“可写权限”。
-  3. 选择“管理 web 钩子”，点击“添加web钩子”，这里的内容如下填写：
-     （1）推送地址：填写如下格式： http://jenkins系统访问地址/gogs-webhook/?job=jenkins任务名称
-              如：http://jenkins.XXXXX.ABC/gogs-webhook/?job=ggjxb_testdb/webtest1_dx_dkjdb
-       需要注意的是job后面的值需要与jenkins当中的一致，错一点都不行。
-     （2）数据格式默认，密钥文本，需要填写与jenkins系统中“Use Gogs secret”对应的内容，如：“mysecretkey” 。
-     （3）触发事件，根据需要选择。
-     （4）最近推送记录 ,这里有一个“测试推送”按钮，点击后，如果触发了jenkins任务，在记录内容的前面会有一个绿色的小勾，否则是警告。
-          因此，用这个功能可以很好的观察到gogs与jenkins的配合效果。
-
-以上配置完成后，只需要在gogs当中存入需要的数据，你所需要即可展示到前台。&lt;/code&gt;&lt;/pre&gt;            </description>
-            <pubDate>2018-05-20 10:29:11</pubDate>
-            <link>http://www.sagaii.cn/blog/20180520JenkinsJobSetting.html</link>
-            <guid isPermaLink="true">http://www.sagaii.cn/blog/20180520JenkinsJobSetting.html</guid>
-                                               <category>technology</category>
+            <?=htmlspecialchars($blog['content'])?>
+            </description>
+            <pubDate><?=$blog['ctime']?></pubDate>
+            <link><?=$site['url']?><?=$blog['siteURL']?></link>
+            <guid isPermaLink="true"><?=$site['url']?><?=$blog['siteURL']?></guid>
+                                               <category><?=$category['name']?></category>
                                     </item>
                 <item>
-            <title>EmguCV Mat元素访问的方法 (emgucv3.4)</title>
+            <title><?=$blog['title']?></title>
             <description>
-            &lt;p&gt;﻿&lt;!--
-author: sagaii
-head: http://www.sagaii.cn/blog/img/zoltunsmall.png
-date: 2018-05-06
-title: EmguCV Mat元素访问的方法 (emgucv3.4)
-tags:  
-images: http://www.sagaii.cn/blog/img/zoltun.png
-category: technology
-status: publish
-summary: RT.
---&gt;&lt;/p&gt;
-&lt;h2&gt;一、  OpenCV Mat类&lt;/h2&gt;
-&lt;p&gt;Mat是一个类，由两个数据部分组成：矩阵头（包含矩阵尺寸、存储方法、存储地址等信息）和一个指向存储所有像素值矩阵的指针。每个Mat对象有自己的信息头，但共享同一个矩阵。这通过让矩阵指向同一地址而实现。而拷贝构造函数则只是复制信息头和矩阵指针，而不是复制矩阵。因此Mat类的对象作为参数传给子函数时，既可以以地址的形式传给子函数，也可以以非地址的形式传给子函数。&lt;/p&gt;
-&lt;p&gt;Mat 不但是一个很赞的图像容器类，它同时也是一个通用的矩阵类，所以可以用来创建和操作多维矩阵。
-需要指定存储元素的数据类型以及每个矩阵点的通道数。为此，依据下面的规则有多种定义:&lt;/p&gt;
-&lt;p&gt;CV_[The number of bits per item][Signed or Unsigned][Type Prefix]C[The channel number]&lt;/p&gt;
-&lt;p&gt;OpenCV (C++) 创建一个Mat对象有多种方法：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;  Mat M(2,2, CV_8UC3, Scalar(0,0,255));
-  cout &amp;lt;&amp;lt; &quot;M = &quot; &amp;lt;&amp;lt; endl &amp;lt;&amp;lt; &quot; &quot; &amp;lt;&amp;lt; M &amp;lt;&amp;lt; endl &amp;lt;&amp;lt; endl;  &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;输出：
-M=[0,0,255,0,0,255;
-0,0,255,0,0,255]&lt;/p&gt;
-&lt;h2&gt;二、  Emgu Mat类&lt;/h2&gt;
-&lt;p&gt;Emgu是C#封装的OpenCV库，基本的使用方法和OpenCV一样，但是在具体使用中还是有一些不太一样的地方。例如对矩阵元素的访问方法上，Emgu因为C#封装的关系，而不推荐使用指针直接访问元素，因此对元素的操作和处理就变得比较费力。OpenCV当中有img.at方法或者Mat::data方式访问。这些在emgucv当中都无法使用。 网上介绍的常见访问方式是采用Marshal的Copy方法，见：&lt;a href=&quot;https://blog.csdn.net/poisonchry/article/details/77620700&quot;&gt;https://blog.csdn.net/poisonchry/article/details/77620700&lt;/a&gt;
-也不失为一种可行的方法。 通过实验，以下代码可在emgucv3.4版本上运行。
-其中lblinfo是 label控件，作为输出载体。&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;      int chn = 3;
-      Mat  testMat = new Mat(new System.Drawing.Size(2,2),Emgu.CV.CvEnum.DepthType.Cv8S,3 );
-      testMat.SetTo(new MCvScalar(0,0,255));
-
-      byte[] data = testMat.GetData();
-      lblInfo.Text = &quot;&quot;;
-      for (int i = 0; i &amp;lt; testMat.Rows; i++)
-      {
-          for (int j = 0; j &amp;lt; testMat.Cols * chn; j++)
-              lblInfo.Text = lblInfo.Text + String.Format(&quot;{0,4}&quot;, data[i * j].ToString()) + &quot; &quot;;
-          lblInfo.Text = lblInfo.Text + &quot;\r\n&quot;;
-      }&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;以上代码核心点在： testMat.GetData()方法。 通过Mat类返回 byte数组。&lt;/p&gt;            </description>
-            <pubDate>2018-05-20 10:29:11</pubDate>
-            <link>http://www.sagaii.cn/blog/20180506MatObject.html</link>
-            <guid isPermaLink="true">http://www.sagaii.cn/blog/20180506MatObject.html</guid>
-                                               <category>technology</category>
+            <?=htmlspecialchars($blog['content'])?>
+            </description>
+            <pubDate><?=$blog['ctime']?></pubDate>
+            <link><?=$site['url']?><?=$blog['siteURL']?></link>
+            <guid isPermaLink="true"><?=$site['url']?><?=$blog['siteURL']?></guid>
+                                               <category><?=$category['name']?></category>
                                     </item>
                 <item>
-            <title>String.Format对C#字符串格式化</title>
+            <title><?=$blog['title']?></title>
             <description>
-            &lt;!--
-author: sagaii
-head: http://www.sagaii.cn/blog/img/zoltunsmall.png
-date: 2018-05-6
-title: String.Format对C#字符串格式化
-tags: String.Format
-images: http://www.sagaii.cn/blog/img/zoltun.png
-category: Knowledge
-status: publish
-summary: RT.
---&gt;
-&lt;h3&gt;1、格式化货币（跟系统的环境有关，中文系统默认格式化人民币，英文系统格式化美元）&lt;/h3&gt;
-&lt;p&gt;string.Format(&amp;quot;{0:C}&amp;quot;,0.2) 结果为：￥0.20 （英文操作系统结果：$0.20）&lt;/p&gt;
-&lt;p&gt;默认格式化小数点后面保留两位小数，如果需要保留一位或者更多，可以指定位数
-string.Format(&amp;quot;{0:C1}&amp;quot;,23.15) 结果为：￥23.2 （截取会自动四舍五入）&lt;/p&gt;
-&lt;p&gt;格式化多个Object实例
-string.Format(&amp;quot;市场价：{0:C}，优惠价{1:C}&amp;quot;,23.15,19.82)&lt;/p&gt;
-&lt;h3&gt;2、格式化十进制的数字（格式化成固定的位数，位数不能少于未格式化前，只支持整形）&lt;/h3&gt;
-&lt;p&gt;string.Format(&amp;quot;{0:D3}&amp;quot;,23) 结果为：023&lt;/p&gt;
-&lt;p&gt;string.Format(&amp;quot;{0:D2}&amp;quot;,1223) 结果为：1223，（精度说明符指示结果字符串中所需的最少数字个数。）&lt;/p&gt;
-&lt;h3&gt;3、用分号隔开的数字，并指定小数点后的位数&lt;/h3&gt;
-&lt;p&gt;string.Format(&amp;quot;{0:N}&amp;quot;, 14200) 结果为：14,200.00 （默认为小数点后面两位）&lt;/p&gt;
-&lt;p&gt;string.Format(&amp;quot;{0:N3}&amp;quot;, 14200.2458) 结果为：14,200.246 （自动四舍五入）&lt;/p&gt;
-&lt;h3&gt;4、格式化百分比&lt;/h3&gt;
-&lt;p&gt;string.Format(&amp;quot;{0:P}&amp;quot;, 0.24583) 结果为：24.58% （默认保留百分的两位小数）&lt;/p&gt;
-&lt;p&gt;string.Format(&amp;quot;{0:P1}&amp;quot;, 0.24583) 结果为：24.6% （自动四舍五入）&lt;/p&gt;
-&lt;h3&gt;5、零占位符和数字占位符&lt;/h3&gt;
-&lt;p&gt;string.Format(&amp;quot;{0:0000.00}&amp;quot;, 12394.039) 结果为：12394.04&lt;/p&gt;
-&lt;p&gt;string.Format(&amp;quot;{0:0000.00}&amp;quot;, 194.039) 结果为：0194.04&lt;/p&gt;
-&lt;p&gt;string.Format(&amp;quot;{0:###.##}&amp;quot;, 12394.039) 结果为：12394.04&lt;/p&gt;
-&lt;p&gt;string.Format(&amp;quot;{0:####.#}&amp;quot;, 194.039) 结果为：194&lt;/p&gt;
-&lt;p&gt;下面的这段说明比较难理解，多测试一下实际的应用就可以明白了。
-零占位符：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;  如果格式化的值在格式字符串中出现“0”的位置有一个数字，则此数字被复制到结果字符串中。小数点前最左边的“0”的位置和小数点后最右边的“0”的位置确定总在结果字符串中出现的数字范围。
-  “00”说明符使得值被舍入到小数点前最近的数字，其中零位总被舍去。&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;数字占位符：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;  如果格式化的值在格式字符串中出现“#”的位置有一个数字，则此数字被复制到结果字符串中。否则，结果字符串中的此位置不存储任何值。
-  请注意，如果“0”不是有效数字，此说明符永不显示“0”字符，即使“0”是字符串中唯一的数字。如果“0”是所显示的数字中的有效数字，则显示“0”字符。
-  “##”格式字符串使得值被舍入到小数点前最近的数字，其中零总被舍去。&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;空格占位符&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;    string.Format(&quot;{0,-50}&quot;, theObj);//格式化成50个字符，原字符左对齐，不足则补空格
-    string.Format(&quot;{0,50}&quot;, theObj);//格式化成50个字符，原字符右对齐，不足则补空格&lt;/code&gt;&lt;/pre&gt;
-&lt;h3&gt;6、日期格式化&lt;/h3&gt;
-&lt;p&gt;string.Format(&amp;quot;{0:d}&amp;quot;,System.DateTime.Now) 结果为：2009-3-20 （月份位置不是03）&lt;/p&gt;
-&lt;p&gt;string.Format(&amp;quot;{0:D}&amp;quot;,System.DateTime.Now) 结果为：2009年3月20日&lt;/p&gt;
-&lt;p&gt;string.Format(&amp;quot;{0:f}&amp;quot;,System.DateTime.Now) 结果为：2009年3月20日 15:37&lt;/p&gt;
-&lt;p&gt;string.Format(&amp;quot;{0:F}&amp;quot;,System.DateTime.Now) 结果为：2009年3月20日 15:37:52&lt;/p&gt;
-&lt;p&gt;string.Format(&amp;quot;{0:g}&amp;quot;,System.DateTime.Now) 结果为：2009-3-20 15:38&lt;/p&gt;
-&lt;p&gt;string.Format(&amp;quot;{0:G}&amp;quot;,System.DateTime.Now) 结果为：2009-3-20 15:39:27&lt;/p&gt;
-&lt;p&gt;string.Format(&amp;quot;{0:m}&amp;quot;,System.DateTime.Now) 结果为：3月20日&lt;/p&gt;
-&lt;p&gt;string.Format(&amp;quot;{0:t}&amp;quot;,System.DateTime.Now) 结果为：15:41&lt;/p&gt;
-&lt;p&gt;string.Format(&amp;quot;{0:T}&amp;quot;,System.DateTime.Now) 结果为：15:41:50&lt;/p&gt;
-&lt;p&gt;更详细的说明请下面微软对此的说明或者上msdn上查询。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;hr /&gt;
-&lt;h2&gt;微软MSDN对string.format的方法说明：&lt;/h2&gt;
-&lt;p&gt;名称 说明
-String.Format (String, Object) 将指定的 String 中的格式项替换为指定的 Object 实例的值的文本等效项。
-String.Format (String, Object[]) 将指定 String 中的格式项替换为指定数组中相应 Object 实例的值的文本等效项。
-String.Format (IFormatProvider, String, Object[]) 将指定 String 中的格式项替换为指定数组中相应 Object 实例的值的文本等效项。指定的参数提供区域性特定的格式设置信息。
-String.Format (String, Object, Object) 将指定的 String 中的格式项替换为两个指定的 Object 实例的值的文本等效项。
-String.Format (String, Object, Object, Object) 将指定的 String 中的格式项替换为三个指定的 Object 实例的值的文本等效项。&lt;/p&gt;
-&lt;p&gt;标准数字格式字符串&lt;/p&gt;
-&lt;p&gt;格式说明符 名称 说明
-C 或 c
-货币
-数字转换为表示货币金额的字符串。转换由当前 NumberFormatInfo 对象的货币格式信息控制。&lt;/p&gt;
-&lt;p&gt;精度说明符指示所需的小数位数。如果省略精度说明符，则使用当前 NumberFormatInfo 对象给定的默认货币精度。&lt;/p&gt;
-&lt;p&gt;D 或 d
-十进制数
-只有整型才支持此格式。数字转换为十进制数字 (0-9) 的字符串，如果数字为负，则前面加负号。&lt;/p&gt;
-&lt;p&gt;精度说明符指示结果字符串中所需的最少数字个数。如果需要的话，则用零填充该数字的左侧，以产生精度说明符给定的数字个数。&lt;/p&gt;
-&lt;p&gt;E 或 e
-科学记数法（指数）
-数字转换为“-d.ddd…E+ddd”或“-d.ddd…e+ddd”形式的字符串，其中每个“d”表示一个数字 (0-9)。如果该数字为负，则该字符串以减号开头。小数点前总有一个数字。&lt;/p&gt;
-&lt;p&gt;精度说明符指示小数点后所需的位数。如果省略精度说明符，则使用默认值，即小数点后六位数字。&lt;/p&gt;
-&lt;p&gt;格式说明符的大小写指示在指数前加前缀“E”还是“e”。指数总是由正号或负号以及最少三位数字组成。如果需要，用零填充指数以满足最少三位数字的要求。&lt;/p&gt;
-&lt;p&gt;F 或 f
-定点
-数字转换为“-ddd.ddd…”形式的字符串，其中每个“d”表示一个数字 (0-9)。如果该数字为负，则该字符串以减号开头。&lt;/p&gt;
-&lt;p&gt;精度说明符指示所需的小数位数。如果忽略精度说明符，则使用当前 NumberFormatInfo 对象给定的默认数值精度。&lt;/p&gt;
-&lt;p&gt;G 或 g
-常规
-根据数字类型以及是否存在精度说明符，数字会转换为定点或科学记数法的最紧凑形式。如果精度说明符被省略或为零，则数字的类型决定默认精度，如下表所示。&lt;/p&gt;
-&lt;p&gt;Byte 或 SByte：3&lt;/p&gt;
-&lt;p&gt;Int16 或 UInt16：5&lt;/p&gt;
-&lt;p&gt;Int32 或 UInt32：10&lt;/p&gt;
-&lt;p&gt;Int64 或 UInt64：19&lt;/p&gt;
-&lt;p&gt;Single：7&lt;/p&gt;
-&lt;p&gt;Double：15&lt;/p&gt;
-&lt;p&gt;Decimal：29&lt;/p&gt;
-&lt;p&gt;如果用科学记数法表示数字时指数大于 -5 而且小于精度说明符，则使用定点表示法；否则使用科学记数法。如果要求有小数点，并且忽略尾部零，则结果包含小数点。如果精度说明符存在，并且结果的有效数字位数超过指定精度，则通过舍入删除多余的尾部数字。&lt;/p&gt;
-&lt;p&gt;上述规则有一个例外：如果数字是 Decimal 而且省略精度说明符时。在这种情况下总使用定点表示法并保留尾部零。&lt;/p&gt;
-&lt;p&gt;使用科学记数法时，如果格式说明符是“G”，结果的指数带前缀“E”；如果格式说明符是“g”，结果的指数带前缀“e”。&lt;/p&gt;
-&lt;p&gt;N 或 n
-数字
-数字转换为“-d,ddd,ddd.ddd…”形式的字符串，其中“-”表示负数符号（如果需要），“d”表示数字 (0-9)，“,”表示数字组之间的千位分隔符，“.”表示小数点符号。实际的负数模式、数字组大小、千位分隔符以及十进制分隔符由当前 NumberFormatInfo 对象指定。&lt;/p&gt;
-&lt;p&gt;精度说明符指示所需的小数位数。如果忽略精度说明符，则使用当前 NumberFormatInfo 对象给定的默认数值精度。&lt;/p&gt;
-&lt;p&gt;P 或 p
-百分比
-数字转换为由 NumberFormatInfo.PercentNegativePattern 或 NumberFormatInfo.PercentPositivePattern 属性定义的、表示百分比的字符串，前者用于数字为负的情况，后者用于数字为正的情况。已转换的数字乘以 100 以表示为百分比。&lt;/p&gt;
-&lt;p&gt;精度说明符指示所需的小数位数。如果忽略精度说明符，则使用当前 NumberFormatInfo 对象给定的默认数值精度。&lt;/p&gt;
-&lt;p&gt;R 或 r
-往返过程
-只有 Single 和 Double 类型支持此格式。往返过程说明符保证转换为字符串的数值再次被分析为相同的数值。使用此说明符格式化数值时，首先使用常规格式对其进行测试：Double 使用 15 位精度，Single 使用 7 位精度。如果此值被成功地分析回相同的数值，则使用常规格式说明符对其进行格式化。但是，如果此值未被成功地分析为相同数值，则它这样格式 化：Double 使用 17 位精度，Single 使用 9 位精度。&lt;/p&gt;
-&lt;p&gt;虽然此处可以存在精度说明符，但它将被忽略。使用此说明符时，往返过程优先于精度。&lt;/p&gt;
-&lt;p&gt;X 或 x
-十六进制数
-只有整型才支持此格式。数字转换为十六进制数字的字符串。格式说明符的大小写指示对大于 9 的十六进制数字使用大写字符还是小写字符。例如，使用“X”产生“ABCDEF”，使用“x”产生“abcdef”。&lt;/p&gt;
-&lt;p&gt;精度说明符指示结果字符串中所需的最少数字个数。如果需要的话，则用零填充该数字的左侧，以产生精度说明符给定的数字个数。&lt;/p&gt;
-&lt;p&gt;任何其他单个字符
-（未知说明符）
-（未知说明符将引发运行库格式异常。）&lt;/p&gt;
-&lt;p&gt;自定义数字格式字符串&lt;/p&gt;
-&lt;p&gt;格式说明符 名称 说明
-0
-零占位符
-如果格式化的值在格式字符串中出现“0”的位置有一个数字，则此数字被复制到结果字符串中。小数点前最左边的“0”的位置和小数点后最右边的“0”的位置确定总在结果字符串中出现的数字范围。&lt;/p&gt;
-&lt;p&gt;“00”说明符使得值被舍入到小数点前最近的数字，其中零位总被舍去。例如，用“00”格式化 34.5 将得到值 35。&lt;/p&gt;
-&lt;h1&gt;数字占位符&lt;/h1&gt;
-&lt;p&gt;如果格式化的值在格式字符串中出现“#”的位置有一个数字，则此数字被复制到结果字符串中。否则，结果字符串中的此位置不存储任何值。&lt;/p&gt;
-&lt;p&gt;请注意，如果“0”不是有效数字，此说明符永不显示“0”字符，即使“0”是字符串中唯一的数字。如果“0”是所显示的数字中的有效数字，则显示“0”字符。&lt;/p&gt;
-&lt;p&gt;“##”格式字符串使得值被舍入到小数点前最近的数字，其中零总被舍去。例如，用“##”格式化 34.5 将得到值 35。&lt;/p&gt;
-&lt;p&gt;.
-小数点
-格式字符串中的第一个“.”字符确定格式化的值中的小数点分隔符的位置；任何其他“.”字符被忽略。&lt;/p&gt;
-&lt;p&gt;用作小数点分隔符的实际字符由控制格式化的 NumberFormatInfo 的 NumberDecimalSeparator 属性确定。&lt;/p&gt;
-&lt;p&gt;,
-千位分隔符和数字比例换算
-“,”字符可作为千位分隔符说明符和数字比例换算说明符。&lt;/p&gt;
-&lt;p&gt;千位分隔符说明符：如果在两个数字占位符（0 或 #）之间指定一个或多个“,”字符用于设置数字整数位的格式，则在输出的整数部分中每个数字组之间插入一个组分隔符字符。&lt;/p&gt;
-&lt;p&gt;当前 NumberFormatInfo 对象的 NumberGroupSeparator 和 NumberGroupSizes 属性将确定用作数字组分隔符的字符以及每个数字组的大小。例如，如果使用字符串“#,#”和固定区域性对数字 1000 进行格式化，则输出为“1,000”。&lt;/p&gt;
-&lt;p&gt;数字比例换算说明符：如果在紧邻显式或隐式小数点的左侧指定一个或多个“,”字符，则每出现一个数字比例换算说明符便将要格式化的数字除以 1000。例如，如果使用字符串“0,,”对数字 1000000000 进行格式化，则输出为“100”。&lt;/p&gt;
-&lt;p&gt;可以在同一格式字符串中使用千位分隔符说明符和数字比例换算说明符。例如，如果使用字符串“#,0,,”和固定区域性对数字 10000000000 进行格式化，则输出为“1,000”。&lt;/p&gt;
-&lt;p&gt;%
-百分比占位符
-在格式字符串中出现“%”字符将导致数字在格式化之前乘以 100。适当的符号插入到数字本身在格式字符串中出现“%”的位置。使用的百分比字符由当前的 NumberFormatInfo 类确定。&lt;/p&gt;
-&lt;p&gt;E0&lt;/p&gt;
-&lt;p&gt;E+0&lt;/p&gt;
-&lt;p&gt;E-0&lt;/p&gt;
-&lt;p&gt;e0&lt;/p&gt;
-&lt;p&gt;e+0&lt;/p&gt;
-&lt;p&gt;e-0
-科学记数法
-如果“E”、“E+”、“E-”、“e”、“e+”或“e-”中的任何一个字符串出现在格式字符串中，而且后面紧跟至少一个“0”字符，则数字用科学记数 法来格式化，在数字和指数之间插入“E”或“e”。跟在科学记数法指示符后面的“0”字符数确定指数输出的最小位数。“E+”和“e+”格式指示符号字符 （正号或负号）应总是置于指数前面。“E”、“E-”、“e”或“e-”格式指示符号字符仅置于负指数前面。&lt;/p&gt;
-&lt;p&gt;\
-转义符
-在 C# 和 C++ 中，反斜杠字符使格式字符串中的下一个字符被解释为转义序列。它与传统的格式化序列一起使用，如“\n”（换行）。&lt;/p&gt;
-&lt;p&gt;在某些语言中，转义符本身用作文本时必须跟在转义符之后。否则，编译器将该字符理解为转义符。使用字符串“\”显示“\”。&lt;/p&gt;
-&lt;p&gt;请注意，Visual Basic 中不支持此转义符，但是 ControlChars 提供相同的功能。&lt;/p&gt;
-&lt;p&gt;’ABC’&lt;/p&gt;
-&lt;p&gt;&amp;quot;ABC&amp;quot;
-字符串
-引在单引号或双引号中的字符被复制到结果字符串中，而且不影响格式化。&lt;/p&gt;
-&lt;p&gt;;
-部分分隔符
-“;”字符用于分隔格式字符串中的正数、负数和零各部分。&lt;/p&gt;
-&lt;p&gt;其他
-所有其他字符
-所有其他字符被复制到结果字符串中，而且不影响格式化。&lt;/p&gt;
-&lt;p&gt;标准 DateTime 格式字符串&lt;/p&gt;
-&lt;p&gt;格式说明符 名称 说明
-d
-短日期模式
-表示由当前 ShortDatePattern 属性定义的自定义 DateTime 格式字符串。&lt;/p&gt;
-&lt;p&gt;例如，用于固定区域性的自定义格式字符串为“MM/dd/yyyy”。&lt;/p&gt;
-&lt;p&gt;D
-长日期模式
-表示由当前 LongDatePattern 属性定义的自定义 DateTime 格式字符串。&lt;/p&gt;
-&lt;p&gt;例如，用于固定区域性的自定义格式字符串为“dddd, dd MMMM yyyy”。&lt;/p&gt;
-&lt;p&gt;f
-完整日期/时间模式（短时间）
-表示长日期 (D) 和短时间 (t) 模式的组合，由空格分隔。&lt;/p&gt;
-&lt;p&gt;F
-完整日期/时间模式（长时间）
-表示由当前 FullDateTimePattern 属性定义的自定义 DateTime 格式字符串。&lt;/p&gt;
-&lt;p&gt;例如，用于固定区域性的自定义格式字符串为“dddd, dd MMMM yyyy HH:mm:ss”。&lt;/p&gt;
-&lt;p&gt;g
-常规日期/时间模式（短时间）
-表示短日期 (d) 和短时间 (t) 模式的组合，由空格分隔。&lt;/p&gt;
-&lt;p&gt;G
-常规日期/时间模式（长时间）
-表示短日期 (d) 和长时间 (T) 模式的组合，由空格分隔。&lt;/p&gt;
-&lt;p&gt;M 或 m
-月日模式
-表示由当前 MonthDayPattern 属性定义的自定义 DateTime 格式字符串。&lt;/p&gt;
-&lt;p&gt;例如，用于固定区域性的自定义格式字符串为“MMMM dd”。&lt;/p&gt;
-&lt;p&gt;o
-往返日期/时间模式
-表示使用保留时区信息的模式的自定义 DateTime 格式字符串。该模式专用于往返 DateTime 格式（包括文本形式的 Kind 属性）。随后将 Parse 或 ParseExact 与正确的 Kind 属性值一起使用可以对格式化的字符串进行反向分析。&lt;/p&gt;
-&lt;p&gt;自定义格式字符串为“yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffffffK”。&lt;/p&gt;
-&lt;p&gt;用于此说明符的模式是定义的标准。因此，无论所使用的区域性或所提供的格式提供程序是什么，它总是相同的。&lt;/p&gt;
-&lt;p&gt;R 或 r
-RFC1123 模式
-表示由当前 RFC1123Pattern 属性定义的自定义 DateTime 格式字符串。该模式是定义的标准，并且属性是只读的。因此，无论所使用的区域性或所提供的格式提供程序是什么，它总是相同的。&lt;/p&gt;
-&lt;p&gt;定义格式字符串为“ddd, dd MMM yyyy HH':'mm':'ss 'GMT'”。&lt;/p&gt;
-&lt;p&gt;格式化不会修改正在格式化的 DateTime 对象的值。因此，应用程序在使用此格式说明符之前必须将该值转换为协调世界时 (UTC)。&lt;/p&gt;
-&lt;p&gt;s
-可排序的日期/时间模式；符合 ISO 8601
-表示由当前 SortableDateTimePattern 属性定义的自定义 DateTime 格式字符串。此模式是定义的标准，并且属性是只读的。因此，无论所使用的区域性或所提供的格式提供程序是什么，它总是相同的。&lt;/p&gt;
-&lt;p&gt;自定义格式字符串为“yyyy'-'MM'-'dd'T'HH':'mm':'ss”。&lt;/p&gt;
-&lt;p&gt;t
-短时间模式
-表示由当前 ShortTimePattern 属性定义的自定义 DateTime 格式字符串。&lt;/p&gt;
-&lt;p&gt;例如，用于固定区域性的自定义格式字符串为“HH:mm”。&lt;/p&gt;
-&lt;p&gt;T
-长时间模式
-表示由当前 LongTimePattern 属性定义的自定义 DateTime 格式字符串。&lt;/p&gt;
-&lt;p&gt;例如，用于固定区域性的自定义格式字符串为“HH:mm:ss”。&lt;/p&gt;
-&lt;p&gt;u
-通用的可排序日期/时间模式
-表示由当前 UniversalSortableDateTimePattern 属性定义的自定义 DateTime 格式字符串。此模式是定义的标准，并且属性是只读的。因此，无论所使用的区域性或所提供的格式提供程序是什么，它总是相同的。&lt;/p&gt;
-&lt;p&gt;自定义格式字符串为“yyyy'-'MM'-'dd HH':'mm':'ss'Z'”。&lt;/p&gt;
-&lt;p&gt;格式化日期和时间时不进行时区转换。因此，应用程序在使用此格式说明符之前必须将本地日期和时间转换为协调世界时 (UTC)。&lt;/p&gt;
-&lt;p&gt;U
-通用的可排序日期/时间模式
-表示由当前 FullDateTimePattern 属性定义的自定义 DateTime 格式字符串。&lt;/p&gt;
-&lt;p&gt;此模式与完整日期/长时间 (F) 模式相同。但是，格式化将作用于等效于正在格式化的 DateTime 对象的协调世界时 (UTC)。&lt;/p&gt;
-&lt;p&gt;Y 或 y
-年月模式
-表示由当前 YearMonthPattern 属性定义的自定义 DateTime 格式字符串。&lt;/p&gt;
-&lt;p&gt;例如，用于固定区域性的自定义格式字符串为“yyyy MMMM”。&lt;/p&gt;
-&lt;p&gt;任何其他单个字符
-（未知说明符）
-未知说明符将引发运行时格式异常。&lt;/p&gt;
-&lt;p&gt;自定义 DateTime 格式字符串&lt;/p&gt;
-&lt;p&gt;格式说明符 说明
-d
-将月中日期表示为从 1 至 31 的数字。一位数字的日期设置为不带前导零的格式。有关使用单个格式说明符的更多信息，请参见使用单个自定义格式说明符。&lt;/p&gt;
-&lt;p&gt;dd
-将月中日期表示为从 01 至 31 的数字。一位数字的日期设置为带前导零的格式。&lt;/p&gt;
-&lt;p&gt;ddd
-将一周中某天的缩写名称表示为当前 System.Globalization.DateTimeFormatInfo.AbbreviatedDayNames 属性中定义的名称。&lt;/p&gt;
-&lt;p&gt;dddd（另加任意数量的“d”说明符）
-将一周中某天的全名表示为当前 System.Globalization.DateTimeFormatInfo.DayNames 属性中定义的名称。&lt;/p&gt;
-&lt;p&gt;f
-表示秒部分的最高有效位。&lt;/p&gt;
-&lt;p&gt;请注意，如果“f”格式说明符单独使用，没有其他格式说明符，则该说明符被看作是“f”标准 DateTime 格式说明符（完整日期/时间模式）。有关使用单个格式说明符的更多信息，请参见使用单个自定义格式说明符。&lt;/p&gt;
-&lt;p&gt;将此格式说明符与 ParseExact 或 TryParseExact 方法一起使用时，所用“f”格式说明符的数目指示要分析的秒部分的最高有效位位数。&lt;/p&gt;
-&lt;p&gt;ff
-表示秒部分的两个最高有效位。&lt;/p&gt;
-&lt;p&gt;fff
-表示秒部分的三个最高有效位。&lt;/p&gt;
-&lt;p&gt;ffff
-表示秒部分的四个最高有效位。&lt;/p&gt;
-&lt;p&gt;fffff
-表示秒部分的五个最高有效位。&lt;/p&gt;
-&lt;p&gt;ffffff
-表示秒部分的六个最高有效位。&lt;/p&gt;
-&lt;p&gt;fffffff
-表示秒部分的七个最高有效位。&lt;/p&gt;
-&lt;p&gt;F
-表示秒部分的最高有效位。如果该位为零，则不显示任何信息。有关使用单个格式说明符的更多信息，请参见使用单个自定义格式说明符。&lt;/p&gt;
-&lt;p&gt;将此格式说明符与 ParseExact 或 TryParseExact 方法一起使用时，所用“F”格式说明符的数目指示要分析的秒部分的最高有效位最大位数。&lt;/p&gt;
-&lt;p&gt;FF
-表示秒部分的两个最高有效位。但不显示尾随零（或两个零位）。&lt;/p&gt;
-&lt;p&gt;FFF
-表示秒部分的三个最高有效位。但不显示尾随零（或三个零位）。&lt;/p&gt;
-&lt;p&gt;FFFF
-表示秒部分的四个最高有效位。但不显示尾随零（或四个零位）。&lt;/p&gt;
-&lt;p&gt;FFFFF
-表示秒部分的五个最高有效位。但不显示尾随零（或五个零位）。&lt;/p&gt;
-&lt;p&gt;FFFFFF
-表示秒部分的六个最高有效位。但不显示尾随零（或六个零位）。&lt;/p&gt;
-&lt;p&gt;FFFFFFF
-表示秒部分的七个最高有效位。但不显示尾随零（或七个零位）。&lt;/p&gt;
-&lt;p&gt;g 或 gg（另加任意数量的“g”说明符）
-表示时期或纪元（例如 A.D.）。如果要设置格式的日期不具有关联的时期或纪元字符串，则忽略该说明符。有关使用单个格式说明符的更多信息，请参见使用单个自定义格式说明符。&lt;/p&gt;
-&lt;p&gt;h
-将小时表示为从 1 至 12 的数字，即通过 12 小时制表示小时，自午夜或中午开始对整小时计数。因此，午夜后经过的某特定小时数与中午过后的相同小时数无法加以区分。小时数不进行舍入，一位数字的小时 数设置为不带前导零的格式。例如，给定时间为 5:43，则此格式说明符显示“5”。有关使用单个格式说明符的更多信息，请参见使用单个自定义格式说明符。&lt;/p&gt;
-&lt;p&gt;hh, hh（另加任意数量的“h”说明符）
-将小时表示为从 01 至 12 的数字，即通过 12 小时制表示小时，自午夜或中午开始对整小时计数。因此，午夜后经过的某特定小时数与中午过后的相同小时数无法加以区分。小时数不进行舍入，一位数字的小时 数设置为带前导零的格式。例如，给定时间为 5:43，则此格式说明符显示“05”。&lt;/p&gt;
-&lt;p&gt;H
-将小时表示为从 0 至 23 的数字，即通过从零开始的 24 小时制表示小时，自午夜开始对小时计数。一位数字的小时数设置为不带前导零的格式。&lt;/p&gt;
-&lt;p&gt;HH, HH（另加任意数量的“H”说明符）
-将小时表示为从 00 至 23 的数字，即通过从零开始的 24 小时制表示小时，自午夜开始对小时计数。一位数字的小时数设置为带前导零的格式。&lt;/p&gt;
-&lt;p&gt;K
-表示 DateTime.Kind 属性的不同值，即“Local”、“Utc”或“Unspecified”。此说明符以文本形式循环设置 Kind 值并保留时区。如果 Kind 值为“Local”，则此说明符等效于“zzz”说明符，用于显示本地时间偏移量，例如“-07:00”。对于“Utc”类型值，该说明符显示字符“Z” 以表示 UTC 日期。对于“Unspecified”类型值，该说明符等效于“”（无任何内容）。&lt;/p&gt;
-&lt;p&gt;m
-将分钟表示为从 0 至 59 的数字。分钟表示自前一小时后经过的整分钟数。一位数字的分钟数设置为不带前导零的格式。有关使用单个格式说明符的更多信息，请参见使用单个自定义格式说明符。&lt;/p&gt;
-&lt;p&gt;mm, mm（另加任意数量的“m”说明符）
-将分钟表示为从 00 至 59 的数字。分钟表示自前一小时后经过的整分钟数。一位数字的分钟数设置为带前导零的格式。&lt;/p&gt;
-&lt;p&gt;M
-将月份表示为从 1 至 12 的数字。一位数字的月份设置为不带前导零的格式。有关使用单个格式说明符的更多信息，请参见使用单个自定义格式说明符。&lt;/p&gt;
-&lt;p&gt;MM
-将月份表示为从 01 至 12 的数字。一位数字的月份设置为带前导零的格式。&lt;/p&gt;
-&lt;p&gt;MMM
-将月份的缩写名称表示为当前 System.Globalization.DateTimeFormatInfo.AbbreviatedMonthNames 属性中定义的名称。&lt;/p&gt;
-&lt;p&gt;MMMM
-将月份的全名表示为当前 System.Globalization.DateTimeFormatInfo.MonthNames 属性中定义的名称。&lt;/p&gt;
-&lt;p&gt;s
-将秒表示为从 0 至 59 的数字。秒表示自前一分钟后经过的整秒数。一位数字的秒数设置为不带前导零的格式。有关使用单个格式说明符的更多信息，请参见使用单个自定义格式说明符。&lt;/p&gt;
-&lt;p&gt;ss, ss（另加任意数量的“s”说明符）
-将秒表示为从 00 至 59 的数字。秒表示自前一分钟后经过的整秒数。一位数字的秒数设置为带前导零的格式。&lt;/p&gt;
-&lt;p&gt;t
-表示当前 System.Globalization.DateTimeFormatInfo.AMDesignator 或 System.Globalization.DateTimeFormatInfo.PMDesignator 属性中定义的 A.M./P.M. 指示符的第一个字符。如果正在格式化的时间中的小时数小于 12，则使用 A.M. 指示符；否则使用 P.M. 指示符。有关使用单个格式说明符的更多信息，请参见使用单个自定义格式说明符。&lt;/p&gt;
-&lt;p&gt;tt, tt（另加任意数量的“t”说明符）
-将 A.M./P.M. 指示符表示为当前 System.Globalization.DateTimeFormatInfo.AMDesignator 或 System.Globalization.DateTimeFormatInfo.PMDesignator 属性中定义的内容。如果正在格式化的时间中的小时数小于 12，则使用 A.M. 指示符；否则使用 P.M. 指示符。&lt;/p&gt;
-&lt;p&gt;y
-将年份表示为最多两位数字。如果年份多于两位数，则结果中仅显示两位低位数。如果年份少于两位数，则该数字设置为不带前导零的格式。有关使用单个格式说明符的更多信息，请参见使用单个自定义格式说明符。&lt;/p&gt;
-&lt;p&gt;yy
-将年份表示为两位数字。如果年份多于两位数，则结果中仅显示两位低位数。如果年份少于两位数，则用前导零填充该数字使之达到两位数。&lt;/p&gt;
-&lt;p&gt;yyy
-将年份表示为三位数字。如果年份多于三位数，则结果中仅显示三位低位数。如果年份少于三位数，则用前导零填充该数字使之达到三位数。&lt;/p&gt;
-&lt;p&gt;请注意，对于年份可以为五位数的泰国佛历，此格式说明符将显示全部五位数。&lt;/p&gt;
-&lt;p&gt;yyyy
-将年份表示为四位数字。如果年份多于四位数，则结果中仅显示四位低位数。如果年份少于四位数，则用前导零填充该数字使之达到四位数。&lt;/p&gt;
-&lt;p&gt;请注意，对于年份可以为五位数的泰国佛历，此格式说明符将呈现全部五位数。&lt;/p&gt;
-&lt;p&gt;yyyyy（另加任意数量的“y”说明符）
-将年份表示为五位数字。如果年份多于五位数，则结果中仅显示五位低位数。如果年份少于五位数，则用前导零填充该数字使之达到五位数。&lt;/p&gt;
-&lt;p&gt;如果存在额外的“y”说明符，则用所需个数的前导零填充该数字使之达到“y”说明符的数目。&lt;/p&gt;
-&lt;p&gt;z
-表示系统时间距格林威治时间 (GMT) 以小时为单位测量的带符号时区偏移量。例如，位于太平洋标准时区中的计算机的偏移量为“-8”。&lt;/p&gt;
-&lt;p&gt;偏移量始终显示为带有前导符号。加号 (+) 指示小时数早于 GMT，减号 (-) 指示小时数迟于 GMT。偏移量范围为 –12 至 +13。一位数字的偏移量设置为不带前导零的格式。偏移量受夏时制影响。有关使用单个格式说明符的更多信息，请参见使用单个自定义格式说明符。&lt;/p&gt;
-&lt;p&gt;zz
-表示系统时间距格林威治时间 (GMT) 以小时为单位测量的带符号时区偏移量。例如，位于太平洋标准时区中的计算机的偏移量为“-08”。&lt;/p&gt;
-&lt;p&gt;偏移量始终显示为带有前导符号。加号 (+) 指示小时数早于 GMT，减号 (-) 指示小时数迟于 GMT。偏移量范围为 –12 至 +13。一位数字的偏移量设置为带前导零的格式。偏移量受夏时制影响。&lt;/p&gt;
-&lt;p&gt;zzz, zzz（另加任意数量的“z”说明符）
-表示系统时间距格林威治时间 (GMT) 以小时和分钟为单位测量的带符号时区偏移量。例如，位于太平洋标准时区中的计算机的偏移量为“-08:00”。&lt;/p&gt;
-&lt;dl&gt;
-&lt;dt&gt;偏移量始终显示为带有前导符号。加号 (+) 指示小时数早于 GMT，减号 (-) 指示小时数迟于 GMT。偏移量范围为 –12 至 +13。一位数字的偏移量设置为带前导零的格式。偏移量受夏时制影响。&lt;/dt&gt;
-&lt;dd&gt;&lt;p&gt;当前 System.Globalization.DateTimeFormatInfo.TimeSeparator 属性中定义的时间分隔符，用于区分小时、分钟和秒。&lt;/p&gt;&lt;/dd&gt;
-&lt;/dl&gt;
-&lt;p&gt;/
-当前 System.Globalization.DateTimeFormatInfo.DateSeparator 属性中定义的日期分隔符，用于区分年、月和日。&lt;/p&gt;
-&lt;p&gt;&amp;quot;
-带引号的字符串（引号）。显示两个引号 (&amp;quot;) 之间的任意字符串的文本值。在每个引号前使用转义符 ()。&lt;/p&gt;
-&lt;p&gt;'
-带引号的字符串（撇号）。显示两个撇号 (') 字符之间的任意字符串的文本值。&lt;/p&gt;
-&lt;p&gt;%c
-当自定义 DateTime 格式字符串只包含自定义格式说明符“c”时，表示与该自定义格式说明符关联的结果。也就是说，若要单独使用自定义格式说明符“d”、“f”、“F”、 “h”、“m”、“s”、“t”、“y”、“z”、“H”或“M”，请指定“%d”、“%f”、“%F”、“%h”、“%m”、“%s”、“%t”、 “%y”、“%z”、“%H”或“%M”。有关使用单个格式说明符的更多信息，请参见使用单个自定义格式说明符。&lt;/p&gt;
-&lt;p&gt;\c
-转义符。当字符“c”前带有转义符 () 时，将该字符显示为文本。若要将反斜杠字符本身插入结果字符串，请使用两个转义符（“\”）。&lt;/p&gt;
-&lt;p&gt;任何其他字符
-所有其他字符被复制到结果字符串中，而且不影响格式化。&lt;/p&gt;
-&lt;p&gt;枚举格式字符串&lt;/p&gt;
-&lt;p&gt;格式字符串 结果
-G 或 g
-如有可能，将枚举项显示为字符串值，否则显示当前实例的整数值。如果枚举定义中设置了 Flags 属性，则串联每个有效项的字符串值并将各值用逗号分开。如果未设置 Flags 属性，则将无效值显示为数字项。&lt;/p&gt;
-&lt;p&gt;F 或 f
-如有可能，将枚举项显示为字符串值。如果值可以完全显示为枚举项的总和（即使未提供 Flags 属性），则串联每个有效项的字符串值并将各值用逗号分开。如果值不能完全由枚举项确定，则将值格式化为整数值。&lt;/p&gt;
-&lt;p&gt;D 或 d
-以尽可能短的表示形式将枚举项显示为整数值。&lt;/p&gt;
-&lt;p&gt;X 或 x
-将枚举项显示为十六进制值。按需要将值表示为带有前导零，以确保值的长度最少有八位&lt;/p&gt;            </description>
-            <pubDate>2018-05-20 10:29:11</pubDate>
-            <link>http://www.sagaii.cn/blog/Knowledge/stringformat.html</link>
-            <guid isPermaLink="true">http://www.sagaii.cn/blog/Knowledge/stringformat.html</guid>
-                                               <category>Knowledge</category>
+            <?=htmlspecialchars($blog['content'])?>
+            </description>
+            <pubDate><?=$blog['ctime']?></pubDate>
+            <link><?=$site['url']?><?=$blog['siteURL']?></link>
+            <guid isPermaLink="true"><?=$site['url']?><?=$blog['siteURL']?></guid>
+                                               <category><?=$category['name']?></category>
                                     </item>
                 <item>
-            <title>图像切割</title>
+            <title><?=$blog['title']?></title>
             <description>
-            &lt;p&gt;﻿&lt;!--
-author: sagaii
-head: http://www.sagaii.cn/blog/img/zoltunsmall.png
-date: 2018-04-21
-title: 图像切割
-tags:  
-images: http://www.sagaii.cn/blog/img/zoltun.png
-category: technology
-status: publish
-summary: cut image
---&gt;&lt;/p&gt;
-&lt;h2&gt;一、 图像切割&lt;/h2&gt;
-&lt;p&gt;以下是关键代码：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;    using (Bitmap bitmap = new Bitmap(dstWidth, dstHeight))
-      {
-          using (Graphics g = Graphics.FromImage(bitmap))
-          {
-              using (Image img = Image.FromFile(srcImagePath))
-              {
-                  g.DrawImage(img, new Rectangle(0, 0, dstWidth, dstHeight),
-                      new Rectangle(srcX, srcY, srcWidth, srcHeight), GraphicsUnit.Pixel);
-                  g.Save();
-                  bitmap.Save(Path.Combine(SavePath, dstImagePath));
-              }
-          }
-      }&lt;/code&gt;&lt;/pre&gt;            </description>
-            <pubDate>2018-05-20 10:29:11</pubDate>
-            <link>http://www.sagaii.cn/blog/20180428cutimage.html</link>
-            <guid isPermaLink="true">http://www.sagaii.cn/blog/20180428cutimage.html</guid>
-                                               <category>technology</category>
+            <?=htmlspecialchars($blog['content'])?>
+            </description>
+            <pubDate><?=$blog['ctime']?></pubDate>
+            <link><?=$site['url']?><?=$blog['siteURL']?></link>
+            <guid isPermaLink="true"><?=$site['url']?><?=$blog['siteURL']?></guid>
+                                               <category><?=$category['name']?></category>
                                     </item>
                 <item>
-            <title>构造函数与析构函数</title>
+            <title><?=$blog['title']?></title>
             <description>
-            &lt;p&gt;﻿&lt;!--
-author: sagaii
-head: http://www.sagaii.cn/blog/img/zoltunsmall.png
-date: 2018-04-21
-title: 构造函数与析构函数
-tags:  ctor
-images: http://www.sagaii.cn/blog/img/zoltun.png
-category: technology
-status: publish
-summary: ctor &amp; dtor
---&gt;&lt;/p&gt;
-&lt;h2&gt;一、 构造函数&lt;/h2&gt;
-&lt;p&gt;构造函数 ，是一种特殊的方法。主要用来在创建对象时初始化对象， 即为对象成员变量赋初始值，总与new运算符一起使用在创建对象的语句中。&lt;/p&gt;
-&lt;p&gt;构造函数的命名必须和类名完全相同。&lt;/p&gt;
-&lt;p&gt;类应该在构造函数执行完后才完成创建。&lt;/p&gt;
-&lt;p&gt;C#当中用 ctor 表示构造函数。 ctor是单词constructor的缩写。&lt;/p&gt;
-&lt;p&gt;在vs编辑器当中 输入 ctor 后，按tab键2次可自动创建构造函数框架。&lt;/p&gt;
-&lt;h2&gt;二、 析构函数&lt;/h2&gt;
-&lt;p&gt;析构函数(destructor) 与构造函数相反，当对象结束其生命周期时（例如对象所在的函数已调用完毕），系统自动执行析构函数。析构函数往往用来做“清理善后” 的工作，如：释放内存。&lt;/p&gt;
-&lt;p&gt;dtor 是单词destructor的缩写。&lt;/p&gt;
-&lt;p&gt;在C#当中析构函数与C++一样，采用~符号开头加上类名来定义。&lt;/p&gt;
-&lt;p&gt;在C#和Java当中由于有垃圾回收机制，因此在对象生命周期结束后，系统会自动销毁对象。&lt;/p&gt;            </description>
-            <pubDate>2018-05-20 10:29:11</pubDate>
-            <link>http://www.sagaii.cn/blog/20180421ctor.html</link>
-            <guid isPermaLink="true">http://www.sagaii.cn/blog/20180421ctor.html</guid>
-                                               <category>technology</category>
+            <?=htmlspecialchars($blog['content'])?>
+            </description>
+            <pubDate><?=$blog['ctime']?></pubDate>
+            <link><?=$site['url']?><?=$blog['siteURL']?></link>
+            <guid isPermaLink="true"><?=$site['url']?><?=$blog['siteURL']?></guid>
+                                               <category><?=$category['name']?></category>
                                     </item>
                 <item>
-            <title>代码架构</title>
+            <title><?=$blog['title']?></title>
             <description>
-            &lt;p&gt;﻿&lt;!--
-author: sagaii
-head: http://www.sagaii.cn/blog/img/zoltunsmall.png
-date: 2018-04-08
-title: 代码架构
-tags:  architecture
-images: http://www.sagaii.cn/blog/img/zoltun.png
-category: technology
-status: publish
-summary: architecture
---&gt;&lt;/p&gt;
-&lt;h2&gt;一、 起因&lt;/h2&gt;
-&lt;p&gt;最近想写一套类似lua的项目管理程序，学习了在sourceforge.net上的luaedit2010的源代码，总感觉代码架构不清晰。
-代码间关系复杂。为此，学习了一下目前主要的架构和模式。&lt;/p&gt;
-&lt;h2&gt;二、 记录&lt;/h2&gt;
-&lt;p&gt;如果你想学好.net，一定要看.net framworks源代码&lt;/p&gt;
-&lt;p&gt;如果你想学好分层结构，一定要去看petshop项目&lt;/p&gt;
-&lt;p&gt;如果你想学好MVC，一定要去看dinner项目&lt;/p&gt;
-&lt;p&gt;如果你想学好DDD，一定要去看Microsoft NLayerApp项目&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://www.cnblogs.com/lori/archive/2013/02/21/2920641.html&quot;&gt;https://www.cnblogs.com/lori/archive/2013/02/21/2920641.html&lt;/a&gt;&lt;/p&gt;
-&lt;h2&gt;三、 思考&lt;/h2&gt;
-&lt;p&gt;目前的代码架构主要采用NTier架构，这个架构模式下，又有clean architecture, onion architecture等等。
-为了使得代码具有高内聚，低耦合，最新的策略是通过依赖注入(DI/Dependence injection)，实现控制反转（IoC/Inverse Of Control），实现解耦。
-主要框架有autofac, Ninject,Spring.NET，Unity，Castle等。主要思想方法是领域驱动设计（DDD）。
-我考虑的代码架构参考clean architecture. 各层直接要解耦，只有Entity层是所有层都能访问。
-基本框架如下：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;                        NTierApplication.UI
-                           |           |
-                           V           |
-                 NTierApplication.BLL  |
-                   |              |    |
-                   V              |    |
-          NTierApplication.DAL    |    |
-                   |              |    |
-                   V              V    V
-                  NTierApplication.Entity&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;源代码下载地址： &lt;a href=&quot;https://github.com/SagaSrc/NTierApplication&quot;&gt;https://github.com/SagaSrc/NTierApplication&lt;/a&gt;&lt;/p&gt;            </description>
-            <pubDate>2018-05-20 10:29:11</pubDate>
-            <link>http://www.sagaii.cn/blog/20180408architecture.html</link>
-            <guid isPermaLink="true">http://www.sagaii.cn/blog/20180408architecture.html</guid>
-                                               <category>technology</category>
+            <?=htmlspecialchars($blog['content'])?>
+            </description>
+            <pubDate><?=$blog['ctime']?></pubDate>
+            <link><?=$site['url']?><?=$blog['siteURL']?></link>
+            <guid isPermaLink="true"><?=$site['url']?><?=$blog['siteURL']?></guid>
+                                               <category><?=$category['name']?></category>
                                     </item>
                 <item>
-            <title>注册Windows服务工具(WinSW) for gogs</title>
+            <title><?=$blog['title']?></title>
             <description>
-            &lt;p&gt;﻿&lt;!--
-author: sagaii
-head: http://www.sagaii.cn/blog/img/zoltunsmall.png
-date: 2018-03-05
-title: 注册Windows服务工具(WinSW) for gogs
-tags:  WinSW
-images: http://www.sagaii.cn/blog/img/zoltun.png
-category: technology
-status: publish
-summary: gogs winsw
---&gt;&lt;/p&gt;
-&lt;h2&gt;一、 原由&lt;/h2&gt;
-&lt;p&gt;近日，看到cnblog上介绍gogs，因前期我用的BonoBo.Git.Server缺少Personal Access Token功能，无法方面的与github,vsts，jenkins集成。
-试用了gogs，发现确实是一款良心之作，如其宣传的“一款极易搭建的自助 Git 服务”（作为中国的一款opensource系统，值得点赞）。
-不过，其介绍的使用内置windows服务功能配置windows服务，很容易失败，其推荐的NSSM好像又貌似复杂（其实也挺简单）。因此，自己又用了一下WinSW.&lt;/p&gt;
-&lt;h2&gt;二、 WinSW&lt;/h2&gt;
-&lt;p&gt;winsw可以将Windows上的任何一个程序注册为服务，如果不需要，也可以方便的卸载服务。 它是一个单个的可执行文件，可以到https://github.com/kohsuke/winsw/releases下载。winsw可以运行在.NET2和.NET4两个版本上。&lt;/p&gt;
-&lt;p&gt;使用前，需要编写一个和程序同名的XML文件作为winsw的配置文件。以下是我配置gogs的参数：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;     &amp;lt;service&amp;gt;
-       &amp;lt;id&amp;gt;gogs&amp;lt;/id&amp;gt;
-       &amp;lt;name&amp;gt;gogs&amp;lt;/name&amp;gt;
-       &amp;lt;description&amp;gt;go git service(port3000)&amp;lt;/description&amp;gt;
-       &amp;lt;executable&amp;gt;gogs.exe&amp;lt;/executable&amp;gt;
-       &amp;lt;arguments&amp;gt; web --config  &quot;D:\gogs\custom\conf\app.ini&quot;&amp;lt;/arguments&amp;gt;
-       &amp;lt;logmode&amp;gt;reset&amp;lt;/logmode&amp;gt;
-    &amp;lt;/service&amp;gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;把配置文件和可执行文件放在一起，打开一个管理员权限的命令提示符或Powershell窗口，然后输入winsw install 命令，如果返回值为0，说明已将程序注册为服务。 如果不再需要这个服务，使用winsw uninstall即可卸载服务。&lt;/p&gt;            </description>
-            <pubDate>2018-05-20 10:29:11</pubDate>
-            <link>http://www.sagaii.cn/blog/20180327WinSW.html</link>
-            <guid isPermaLink="true">http://www.sagaii.cn/blog/20180327WinSW.html</guid>
-                                               <category>technology</category>
+            <?=htmlspecialchars($blog['content'])?>
+            </description>
+            <pubDate><?=$blog['ctime']?></pubDate>
+            <link><?=$site['url']?><?=$blog['siteURL']?></link>
+            <guid isPermaLink="true"><?=$site['url']?><?=$blog['siteURL']?></guid>
+                                               <category><?=$category['name']?></category>
                                     </item>
                 <item>
-            <title>关于反向代理的总结</title>
+            <title><?=$blog['title']?></title>
             <description>
-            &lt;p&gt;﻿&lt;!--
-author: sagaii
-head: http://www.sagaii.cn/blog/img/zoltunsmall.png
-date: 2018-03-05
-title: 关于反向代理的总结
-tags:  ReverseProxy
-images: http://www.sagaii.cn/blog/img/zoltun.png
-category: technology
-status: publish
-summary: .
---&gt;&lt;/p&gt;
-&lt;h2&gt;一、 原由&lt;/h2&gt;
-&lt;p&gt;单位服务器对外的域名和IP都有限制，最近端口也封锁的很严重，又搞了个安恒玄武盾，搞定好的功能都没办法使用。
-最初选择反向代理主要是希望通过网址的二级目录形式访问内网不同端口的web服务。开始选择的是Bonobo git server
-通过http方式提交代码，应该是最基本的吧，谁知url当中出现&amp;quot;.&amp;quot;就会被防火墙识别成威胁，最后选择了scm-manager。
-为此，专门学习了一下反向代理。&lt;/p&gt;
-&lt;h2&gt;二、 反向代理原理&lt;/h2&gt;
-&lt;p&gt;反向代理（Reverse Proxy）方式是指以代理服务器来接受Internet上的连接请求，然后将请求转发给内部网络上的服务器；并将从服务器上得到的结果返回给Internet上请求连接的客户端，此时代理服务器对外就表现为一个服务器。
-通常的代理服务器，只用于代理内部网络对Internet的连接请求，客户机必须指定代理服务器,并将本来要直接发送到Web服务器上的http请求发送到代理服务器中。当一个代理服务器能够代理外部网络上的主机，访问内部网络时，这种代理服务的方式称为反向代理服务。
-&lt;img src=&quot;./img/rp.gif&quot; alt=&quot;反向代理原理图&quot; /&gt;&lt;/p&gt;
-&lt;h2&gt;三、 IIS反向代理配置&lt;/h2&gt;
-&lt;p&gt;配置IIS反向代理需要下载安装ARR（Application Request Routing）， &lt;a href=&quot;http://www.iis.net/downloads/microsoft/application-request-routing&quot;&gt;http://www.iis.net/downloads/microsoft/application-request-routing&lt;/a&gt;
-安装完成后，IIS里会多出两个图标，分别是Application Request Routing和URL重写。注意：需要在IIS当中双击ApplicationRequest Routing，在右侧Server Proxy Settings里，将代理功能开启。&lt;/p&gt;
-&lt;p&gt;IIS反向代理配置实质就是配置URL重写规则。IIS当中的URL重写规则分为“入站规则”和“出站规则”。简单的理解入站规则指的是外部用户通过浏览器向代理服务器提出的Get请求（通过浏览器调试工具中控制台可以查看）时应用的规则。出站规则指的是代理服务器接后台回传回来的数据后，通过反向代理服务器向用户端浏览器回传过程当中应用的规则。
-iis反向代理配置当中最难写的就是出站规则。 入站规则和出站规则当中对于url后面是否多一个“/”，往往也会带来不小的坑。
-出站规则建议先用向导配置，会产生一个判别文本是html的条件，如果缺少这个条件往往出站规则就会错误。&lt;/p&gt;
-&lt;h2&gt;四、Nginx反向代理配置&lt;/h2&gt;
-&lt;p&gt;nginx配置反向代理确实比较简单。 但是，nginx默认只支持类似iis的入站规则代理，即客户端提出get请求的时候，进行url的改写。另外，好像默认是启动了动静分离，静态内容（css,js）默认是从nginx代理服务器的目录当中访问，当启用了nginx反向代理，指向内网的服务器的时候，往往会丢失css和js。对于丢失css和js的解决方法是是采用rewrite语句改写get请求（url)，这带来的一个问题是css和js需要有一个相同的改写模式。 如果一个代理服务器要配置转向多个web网站的时候，往往会隐藏风险。&lt;/p&gt;
-&lt;p&gt;总结：个人配置了iis反向代理，反而认为功能要比nginx强大，好用。 nginx虽然简单的配置html的代理简单，但是对于多个网站的同时反向代理不太合适。 实际上，最后2个反向代理方法都放弃了。 选择了FRP内网穿透功能。&lt;/p&gt;
-&lt;h2&gt;五、正则表达式&lt;/h2&gt;
-&lt;p&gt;不管是iis和nginx的反向代理，都需要用到正则表达式。 验证正则表达式最好的平台应该就是：
-&lt;a href=&quot;https://regex101.com/&quot;&gt;https://regex101.com/&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;事实上，这个网站也是开源的，托管在github上。&lt;/p&gt;            </description>
-            <pubDate>2018-05-20 10:29:11</pubDate>
-            <link>http://www.sagaii.cn/blog/20180305AboutReverseProxy.html</link>
-            <guid isPermaLink="true">http://www.sagaii.cn/blog/20180305AboutReverseProxy.html</guid>
-                                               <category>technology</category>
+            <?=htmlspecialchars($blog['content'])?>
+            </description>
+            <pubDate><?=$blog['ctime']?></pubDate>
+            <link><?=$site['url']?><?=$blog['siteURL']?></link>
+            <guid isPermaLink="true"><?=$site['url']?><?=$blog['siteURL']?></guid>
+                                               <category><?=$category['name']?></category>
                                     </item>
                 <item>
-            <title>实用网站集</title>
+            <title><?=$blog['title']?></title>
             <description>
-            &lt;!--
-author: sagaii
-head: http://www.sagaii.cn/blog/img/zoltunsmall.png
-date: 2018-01-14
-title: 实用网站集
-tags: SitesLink
-images: http://www.sagaii.cn/blog/img/zoltun.png
-category: SiteLink
-status: publish
-summary: 记录一些非常实用的网站.
---&gt;
-&lt;h2&gt;一、开发类&lt;/h2&gt;
-&lt;h3&gt;1. PC端开发&lt;/h3&gt;
-&lt;p&gt;&lt;a href=&quot;https://dotnet.github.io/&quot;&gt;1. .net core (&lt;a href=&quot;https://dotnet.github.io/&quot;&gt;https://dotnet.github.io/&lt;/a&gt;)&lt;/a&gt;  &lt;/p&gt;
-&lt;h3&gt;2.  移动端开发&lt;/h3&gt;
-&lt;p&gt;&lt;a href=&quot;http://www.apicloud.com&quot;&gt;1. APICloud(&lt;a href=&quot;http://www.apicloud.com&quot;&gt;http://www.apicloud.com&lt;/a&gt;)&lt;/a&gt;  &lt;/p&gt;
-&lt;h2&gt;二、 工具类&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;https://www.scm-manager.org/&quot;&gt;1. Git仓库管理工具--SCM-Manager (&lt;a href=&quot;https://www.scm-manager.org/&quot;&gt;https://www.scm-manager.org/&lt;/a&gt;)&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://jenkins.io/&quot;&gt;2. 持续集成工具--Jenkins (&lt;a href=&quot;https://jenkins.io/&quot;&gt;https://jenkins.io/&lt;/a&gt;)&lt;/a&gt;  &lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://regex101.com/&quot;&gt;3. 正则表达式核查工具(&lt;a href=&quot;https://regex101.com/&quot;&gt;https://regex101.com/&lt;/a&gt;)&lt;/a&gt;  &lt;/p&gt;
-&lt;h2&gt;三、 教育类&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;http://www.planetsforkids.org&quot;&gt;1. planets for kids (&lt;a href=&quot;http://www.planetsforkids.org&quot;&gt;http://www.planetsforkids.org&lt;/a&gt;) &lt;/a&gt;  &lt;/p&gt;
-&lt;h2&gt;四、 杂项&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;https://github.com/jockchou/gitblog&quot;&gt;1.使用Gitblog和Markdown搭建自己的博客网站 &lt;/a&gt;  &lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://github.com/jockchou/gitblog&quot;&gt;2.整合Wikitten和MDwiki搭建个人知识库 &lt;/a&gt;  &lt;/p&gt;
-&lt;p&gt;[3.战斗民族语言研究所-克林贡语]&lt;/p&gt;            </description>
-            <pubDate>2018-05-20 10:29:11</pubDate>
-            <link>http://www.sagaii.cn/blog/Knowledge/BestSite/bestsiteidx.html</link>
-            <guid isPermaLink="true">http://www.sagaii.cn/blog/Knowledge/BestSite/bestsiteidx.html</guid>
-                                               <category>SiteLink</category>
+            <?=htmlspecialchars($blog['content'])?>
+            </description>
+            <pubDate><?=$blog['ctime']?></pubDate>
+            <link><?=$site['url']?><?=$blog['siteURL']?></link>
+            <guid isPermaLink="true"><?=$site['url']?><?=$blog['siteURL']?></guid>
+                                               <category><?=$category['name']?></category>
                                     </item>
                 <item>
-            <title>2018第一篇Blog</title>
+            <title><?=$blog['title']?></title>
             <description>
-            &lt;p&gt;﻿&lt;!--
-author: sagaii
-head: http://www.sagaii.cn/blog/img/zoltunsmall.png
-date: 2018-01-14
-title: 2018第一篇Blog
-tags: FirstBlog
-images: http://www.sagaii.cn/blog/img/zoltun.png
-category: Others
-status: publish
-summary: 2018乱弹Blog.
---&gt;&lt;/p&gt;
-&lt;h2&gt;一、 引言&lt;/h2&gt;
-&lt;p&gt;好久好久没写Blog，最近总觉得记性不好，是需要把一些东西记录下来。另外，网上很多精华的东西实在太少了
-坑很多，因此，本Blog就想把某些细节的坑给补上。&lt;/p&gt;
-&lt;h2&gt;二、 由来&lt;/h2&gt;
-&lt;ol&gt;
-&lt;li&gt;不是游戏沉溺者，但一直是大菠萝粉。&lt;/li&gt;
-&lt;li&gt;Zoltun Kulle  (&lt;a href=&quot;https://www.diablowiki.net/Zoltun_Kulle&quot;&gt;https://www.diablowiki.net/Zoltun_Kulle&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;名言：当他们杀害安达利尔时，我没有站起来说话， 当他们杀害阿兹莫丹时，我没有站起来说话， 当他们杀害堕落的衣卒尔时，我没有站起来说话， 当最终他们走向我时，再也没有人站出来为我说话。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2&gt;三、 关于本Blog系统&lt;/h2&gt;
-&lt;p&gt;本Blog系统是基于GitBlog系统搭建（感谢作者），expert 全站静态页面。
-后台支持程序有 gogs, jenkins, github .&lt;/p&gt;
-&lt;p&gt;基本工作流程如下：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;用atom撰写文字（客户机，笔记本等）&lt;/li&gt;
-&lt;li&gt;git上传到gogs系统（服务器1）（git-server系统部署在单位内网，通过配置FRP穿透访问（服务器2））&lt;/li&gt;
-&lt;li&gt;配置jenkins任务（服务器1），定时下载git库当中的文档，使用gitblog 导出全站命令生成静态页面&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;配置jenkins任务（服务器1），定时上传静态页面到github.&lt;/p&gt;
-&lt;p&gt;以前写的一些Blog都因为各种原因丢失了。所以，这次做了备份，把单位内网的git-server等内容用Syncthing同步备份到家里的NAS当中。&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2&gt;四、联系交流&lt;/h2&gt;
-&lt;pre&gt;&lt;code&gt;  Email to me , sagaii :  cube_npc@foxmail.com            &lt;/code&gt;&lt;/pre&gt;            </description>
-            <pubDate>2018-05-20 10:29:11</pubDate>
-            <link>http://www.sagaii.cn/blog/firstBlog.html</link>
-            <guid isPermaLink="true">http://www.sagaii.cn/blog/firstBlog.html</guid>
-                                               <category>Others</category>
+            <?=htmlspecialchars($blog['content'])?>
+            </description>
+            <pubDate><?=$blog['ctime']?></pubDate>
+            <link><?=$site['url']?><?=$blog['siteURL']?></link>
+            <guid isPermaLink="true"><?=$site['url']?><?=$blog['siteURL']?></guid>
+                                               <category><?=$category['name']?></category>
                                     </item>
                 <item>
-            <title>欢迎使用GitBlog</title>
+            <title><?=$blog['title']?></title>
             <description>
-            &lt;!--
-author: jockchou
-head: http://pingodata.qiniudn.com/jockchou-avatar.jpg
-date: 2015-07-31
-title: 欢迎使用GitBlog
-tags: GitBlog
-images: http://pingodata.qiniudn.com/cube2.jpg
-category: Others
-status: publish
-summary: GitBlog。
---&gt;
-&lt;h2&gt;一. 简介&lt;/h2&gt;
-&lt;p&gt;GitBlog是一个简单易用的Markdown博客系统，它不需要数据库，没有管理后台功能，更新博客只需要添加你写好的Markdown文件即可。它摆脱了在线编辑器排版困难，无法实时预览的缺点，一切都交给Markdown来完成，一篇博客就是一个Markdown文件。同时也支持评论，代码高亮，数学公式，页面PV统计等常用功能。GitBlog提供了不同的主题样式，你可以根据自己的喜好配置，如果你想自己制作博客主题，也是非常容易的。GitBlog还支持整站静态导出，你完全可以导出整站静态网页部署到Github Pages。&lt;/p&gt;
-&lt;h2&gt;二. 功能特点&lt;/h2&gt;
-&lt;ol&gt;
-&lt;li&gt;使用Markdown  &lt;/li&gt;
-&lt;li&gt;评论框  &lt;/li&gt;
-&lt;li&gt;代码高亮  &lt;/li&gt;
-&lt;li&gt;PV统计  &lt;/li&gt;
-&lt;li&gt;Latex数学公式  &lt;/li&gt;
-&lt;li&gt;自制主题  &lt;/li&gt;
-&lt;li&gt;响应式  &lt;/li&gt;
-&lt;li&gt;全站静态导出  &lt;/li&gt;
-&lt;li&gt;良好的SEO  &lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2&gt;三. GitBlog优势&lt;/h2&gt;
-&lt;ol&gt;
-&lt;li&gt;无需数据库，系统更轻量，移植更方便  &lt;/li&gt;
-&lt;li&gt;使用Markdown编写，摆脱后台编辑排版困难，无法实时预览的缺点  &lt;/li&gt;
-&lt;li&gt;可全站静态导出  &lt;/li&gt;
-&lt;li&gt;配置灵活，可自由开关某些功能  &lt;/li&gt;
-&lt;li&gt;多主题支持，可自制主题  &lt;/li&gt;
-&lt;li&gt;博客，分类，标签，归档  &lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2&gt;四. 环境要求&lt;/h2&gt;
-&lt;p&gt;PHP 5.2.4+&lt;/p&gt;
-&lt;h2&gt;五. 安装步骤&lt;/h2&gt;
-&lt;ol&gt;
-&lt;li&gt;下载GitBlog源代码  &lt;/li&gt;
-&lt;li&gt;解压上传到你的PHP网站根目录  &lt;/li&gt;
-&lt;li&gt;打开浏览器，访问网站首页  &lt;/li&gt;
-&lt;li&gt;上传Markdown文件到&lt;code&gt;posts&lt;/code&gt;文件夹  &lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2&gt;六. 详细说明&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/install.md&quot;&gt;1. 安装&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/struct.md&quot;&gt;2. 目录结构&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/config.md&quot;&gt;3. 配置说明&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/edit.md&quot;&gt;4. 编写博客&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/other-func.md&quot;&gt;5. 评论，订阅，统计等&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/cache.md&quot;&gt;6. 缓存机制&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/export.md&quot;&gt;7. 全站静态导出&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/theme.md&quot;&gt;8. 主题制作&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/nginx.md&quot;&gt;9. 在Nginx上运行GitBlog&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/apache.md&quot;&gt;10. 在Apache上运行GitBlog&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/sae.md&quot;&gt;11. 在SAE上运行GitBlog&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/github-pages.md&quot;&gt;12. 使用GitBlog和Github Pages搭建博客&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/update.md&quot;&gt;13. Gitblog升级&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://github.com/jockchou/gitblogdoc/tree/master/posts/gitblog/wordpress.md&quot;&gt;14. 从wordpress导入&lt;/a&gt;&lt;/p&gt;
-&lt;h2&gt;七. 问题及bug反馈&lt;/h2&gt;
-&lt;p&gt;如果在实际使用过程中对GitBlog有新的功能需求，或者在使用GitBlog的过程中发现了Bug，欢迎反馈给我。可以直接在Github上提交，也可以发邮件至&lt;code&gt;164068300[AT]qq.com&lt;/code&gt;与我取得联系，我将及时回复。如果你自己制作了漂亮好用的主题，也非常欢迎你提交给我，我会在这里展示你的主题链接。如果你正在使用GitBlog，也可以告诉我，我将也会在这里列出使用者名单。如果你想和其他GitBlog使用者讨论交流，欢迎加入QQ群&lt;code&gt;84692078&lt;/code&gt;。&lt;/p&gt;
-&lt;h2&gt;八. 使用者列表&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;http://blog.hiweeds.net&quot;&gt;Weeds&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://xiaochengzi.sinaapp.com&quot;&gt;橙子&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://jockchou.com&quot;&gt;jockchou&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://github.com/jockchou/gitblogdoc&quot;&gt;GitBlog Doc&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://zxy.link&quot;&gt;zxy&lt;/a&gt;  &lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2&gt;九. 感谢&lt;/h2&gt;
-&lt;p&gt;GitBlog的成长需要喜欢Markdown，喜欢写博客的各位亲们支持！感谢你们使用GitBlog，感激你们对Gitblog的良好建议与Bug反馈。&lt;/p&gt;
-&lt;p&gt;QQ群：&lt;code&gt;84692078&lt;/code&gt;&lt;br /&gt;
-作者邮箱：&lt;code&gt;164068300[AT]qq.com&lt;/code&gt;    &lt;/p&gt;            </description>
-            <pubDate>2018-05-20 10:29:11</pubDate>
-            <link>http://www.sagaii.cn/blog/welcome.html</link>
-            <guid isPermaLink="true">http://www.sagaii.cn/blog/welcome.html</guid>
-                                               <category>Others</category>
+            <?=htmlspecialchars($blog['content'])?>
+            </description>
+            <pubDate><?=$blog['ctime']?></pubDate>
+            <link><?=$site['url']?><?=$blog['siteURL']?></link>
+            <guid isPermaLink="true"><?=$site['url']?><?=$blog['siteURL']?></guid>
+                                               <category><?=$category['name']?></category>
+                                    </item>
+                <item>
+            <title><?=$blog['title']?></title>
+            <description>
+            <?=htmlspecialchars($blog['content'])?>
+            </description>
+            <pubDate><?=$blog['ctime']?></pubDate>
+            <link><?=$site['url']?><?=$blog['siteURL']?></link>
+            <guid isPermaLink="true"><?=$site['url']?><?=$blog['siteURL']?></guid>
+                                               <category><?=$category['name']?></category>
+                                    </item>
+                <item>
+            <title><?=$blog['title']?></title>
+            <description>
+            <?=htmlspecialchars($blog['content'])?>
+            </description>
+            <pubDate><?=$blog['ctime']?></pubDate>
+            <link><?=$site['url']?><?=$blog['siteURL']?></link>
+            <guid isPermaLink="true"><?=$site['url']?><?=$blog['siteURL']?></guid>
+                                               <category><?=$category['name']?></category>
                                     </item>
             </channel>
 </rss>
